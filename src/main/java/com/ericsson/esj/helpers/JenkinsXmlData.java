@@ -50,10 +50,10 @@ public class JenkinsXmlData {
     public String getXmlAsString() {
         xmlJsonData.getJSONObject("project").put("builders", builders);
         xmlJsonData.getJSONObject("project").put("properties", properties);
-        System.out.println(xmlJsonData.toString(2));
+
         String xmlDataString = XML.toString(xmlJsonData);
         xmlDataString = removeExtraGroovyParams(xmlDataString);
-        // System.out.println(xmlDataString);
+
         return (XML_VERSION + xmlDataString);
     }
 
