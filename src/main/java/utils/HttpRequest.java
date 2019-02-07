@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
@@ -15,8 +16,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,16 +33,14 @@ public class HttpRequest {
 
     @Getter
     @Setter
-    protected String jenkinsBaseUrl;
+    protected String baseUrl;
 
     @Getter
     @Setter
     protected String endpoint;
+
     @Getter
     protected Map<String, String> params;
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequest.class);
 
     public HttpRequest(HttpMethod method) {
         params = new HashMap<>();
@@ -64,53 +61,60 @@ public class HttpRequest {
         }
     }
 
-    /*
+    /**
      * Function that clean parameters field only.
      */
     public void cleanParams() {
         params.clear();
     }
 
-    /*
+    /**
      * Function that resets the HTTP Request object so it can be reused.
-     *
      */
     public void resetHttpRequestObject() {
         this.cleanParams();
         request.reset();
     }
 
-    /*
+    /**
      * Function for adding headers to the http request.
      *
-     * @param key , the key of the header
-     * @param value, the value of the header
-     *
-     * @return HTTPRequest
+     * @param key   :: the key of the header
+     * @param value :: the value of the header
+     * @return
      */
     public HttpRequest addHeader(String key, String value) {
         request.addHeader(key, value);
         return this;
     }
 
-    /*
+    /**
      * Function for adding parameters to the http request.
      *
-     * @param key , the key of the parameter
-     * @param value, the value of the parameter
+     * @param parameters  :: List<NameValuePair>
+     */
+    public void addParameters(Map<String, String> parameters) {
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            addParam(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Function for adding parameters to the http request.
      *
-     * @return HTTPRequest
+     * @param key   :: the key of the parameter
+     * @param value :: the value of the parameter
+     * @return
      */
     public HttpRequest addParam(String key, String value) {
         params.put(key, value);
         return this;
     }
 
-    /*
+    /**
      * Function that set the body of the http request.
      *
-     * @param body , the body to be set in the http request.
-     *
+     * @param body   :: String input
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body) {
@@ -118,28 +122,34 @@ public class HttpRequest {
         return this;
     }
 
-    /*
+    /**
      * Function that set the body of the http request.
      *
-     * @param body , the file with body content to be set in the http request.
+     * @param file   :: File input
+     * @return HTTPRequest
+     * @throws IOException
      */
-    public void setBody(File file) {
+    public HttpRequest setBody(File file) throws IOException {
         String fileContent = "";
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            LOGGER.error("Failed to read the Request body file:" + file.getPath() + ". Message: " + e.getMessage(), e);
+            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: "
+                    + e.getMessage();
+            throw new IOException(message);
         }
-        setBody(fileContent);
+        return setBody(fileContent);
     }
 
-    /*
+    /**
      * Function that execute http request.
-     *
-     * @return ResponseEntity<String> , the response of the performed http request.
+     * @return ResponseEntity, the response of the performed http
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws ClientProtocolException
      */
-    public ResponseEntity performRequest() throws URISyntaxException {
-        URIBuilder builder = new URIBuilder(jenkinsBaseUrl + endpoint);
+    public ResponseEntity performRequest() throws URISyntaxException, ClientProtocolException, IOException {
+        URIBuilder builder = new URIBuilder(baseUrl + endpoint);
 
         if (!params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {

@@ -2,20 +2,17 @@
 <project>
   <description></description>
   <keepDependencies>false</keepDependencies>
-  <properties/>
+  <properties></properties>
   <scm class="hudson.scm.NullSCM"/>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <authToken>${auth.token}</authToken>
+  <authToken></authToken>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>${shell.script}</command>
-    </hudson.tasks.Shell>
-  </builders>
+  <builders></builders>
   <publishers/>
   <buildWrappers/>
 </project>
+  
