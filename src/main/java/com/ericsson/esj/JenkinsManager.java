@@ -59,6 +59,10 @@ public class JenkinsManager {
      *            :: Jenkins username as String
      * @param password
      *            :: Jenkins password or API-token
+     * @throws URISyntaxException
+     * @throws JSONException
+     * @throws IOException
+     * @throws ClientProtocolException
      */
     public JenkinsManager(String protocol, String host, int port, String username, String password)
             throws URISyntaxException, JSONException, ClientProtocolException, IOException {
