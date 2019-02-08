@@ -17,7 +17,7 @@
 
 <img src="./images/logo.png" alt="Eiffel Shared Java" width="350"/>
 
-# Eiffel Shared Java
+# Eiffel Commons
 ** To be added **
 
 # About this repository
