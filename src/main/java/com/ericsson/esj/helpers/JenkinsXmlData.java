@@ -36,8 +36,8 @@ public class JenkinsXmlData {
     private static final String JENKINS_JOB_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "main", "resources",
             "jenkinsJobTemplate.xml");
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
-    private static final String HUDSON_PARAMETERS_DEFENITION_KEY = "hudson.model.ParametersDefinitionProperty";
-    private static final String PARAMETER_DEFENITION_KEY = "parameterDefinitions";
+    private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
+    private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
 
     private JSONObject xmlJsonData;
     private JSONObject builders;
@@ -145,7 +145,7 @@ public class JenkinsXmlData {
         param.put("defaultValue", defaultValue);
         param.put("trim", false);
 
-        properties.getJSONObject(HUDSON_PARAMETERS_DEFENITION_KEY).getJSONObject(PARAMETER_DEFENITION_KEY)
+        properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
                 .getJSONArray(parametertypeKey).put(param);
     }
 
@@ -172,25 +172,25 @@ public class JenkinsXmlData {
      * @param parametertypeKey
      */
     private void validatePropertiesObject(String parametertypeKey) {
-        boolean hasHudsonParametersDefinitionKey = properties.has(HUDSON_PARAMETERS_DEFENITION_KEY);
+        boolean hasHudsonParametersDefinitionKey = properties.has(HUDSON_PARAMETERS_DEFINITION_KEY);
         if (!hasHudsonParametersDefinitionKey) {
             JSONObject parametersDefinitionProperty = new JSONObject();
-            properties.put(HUDSON_PARAMETERS_DEFENITION_KEY, parametersDefinitionProperty);
+            properties.put(HUDSON_PARAMETERS_DEFINITION_KEY, parametersDefinitionProperty);
         }
 
-        boolean hasParameterDefinitions = properties.getJSONObject(HUDSON_PARAMETERS_DEFENITION_KEY)
-                .has(PARAMETER_DEFENITION_KEY);
+        boolean hasParameterDefinitions = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                .has(PARAMETER_DEFINITION_KEY);
         if (!hasParameterDefinitions) {
             JSONObject parameterDefinitions = new JSONObject();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFENITION_KEY).put(PARAMETER_DEFENITION_KEY,
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).put(PARAMETER_DEFINITION_KEY,
                     parameterDefinitions);
         }
 
-        boolean hasParametertypeKey = properties.getJSONObject(HUDSON_PARAMETERS_DEFENITION_KEY)
-                .getJSONObject(PARAMETER_DEFENITION_KEY).has(parametertypeKey);
+        boolean hasParametertypeKey = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                .getJSONObject(PARAMETER_DEFINITION_KEY).has(parametertypeKey);
         if (!hasParametertypeKey) {
             JSONArray parametertype = new JSONArray();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFENITION_KEY).getJSONObject(PARAMETER_DEFENITION_KEY)
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
                     .put(parametertypeKey, parametertype);
         }
     }
