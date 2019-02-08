@@ -33,8 +33,7 @@ import com.ericsson.ec.utils.Utils;
  */
 public class JenkinsXmlData {
 
-    private static final String JENKINS_JOB_TEMPLATE_FILE_PATH = String.join(File.separator, "src", "main", "resources",
-            "jenkinsJobTemplate.xml");
+    private static final String JENKINS_JOB_TEMPLATE_FILE_PATH = "/jenkinsJobTemplate.xml";
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
     private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
     private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
