@@ -1,4 +1,4 @@
-package com.ericsson.esj.jenkins_manager_test;
+package com.ericsson.ec.jenkins_manager_test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.ericsson.esj.JenkinsManager;
-import com.ericsson.esj.helpers.JenkinsXmlData;
+import com.ericsson.ec.JenkinsManager;
+import com.ericsson.ec.helpers.JenkinsXmlData;
 
 /**
  * This test is executed as java application within Eclipse. This is not the

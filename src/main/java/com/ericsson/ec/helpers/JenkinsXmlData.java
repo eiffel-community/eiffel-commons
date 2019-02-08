@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.esj.helpers;
+package com.ericsson.ec.helpers;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
-import utils.Utils;
+import com.ericsson.ec.utils.Utils;
 
 /**
  * This class is a builder for jenkins xml data string.
@@ -75,17 +75,20 @@ public class JenkinsXmlData {
      * This function adds the job token to the XML data.
      *
      * @param token
+     * @return this JenkinsXmlData
      */
-    public void addJobToken(String token) {
+    public JenkinsXmlData addJobToken(String token) {
         xmlJsonData.getJSONObject("project").put("authToken", token);
+        return this;
     }
 
     /**
      * This function adds bash script to the XML data.
      *
      * @param script
+     * @return this JenkinsXmlData
      */
-    public void addBashScript(String script) {
+    public JenkinsXmlData addBashScript(String script) {
         String husdonShellKey = "hudson.tasks.Shell";
         boolean hasKeyShell = builders.has(husdonShellKey);
 
@@ -98,14 +101,16 @@ public class JenkinsXmlData {
         newCommand.put("command", script);
 
         builders.getJSONArray(husdonShellKey).put(newCommand);
+        return this;
     }
 
     /**
      * This function adds groovy script to the XML data.
      *
      * @param script
+     * @return this JenkinsXmlData
      */
-    public void addGrovyScript(String script) {
+    public JenkinsXmlData addGrovyScript(String script) {
         String hudsonGroovyKey = "hudson.plugins.groovy.Groovy plugin='groovy@2.1'";
         boolean hasKeyGroovy = builders.has(hudsonGroovyKey);
 
@@ -117,6 +122,7 @@ public class JenkinsXmlData {
         JSONObject newGroovyCommand = BuildGroovyObject(script);
 
         builders.getJSONArray(hudsonGroovyKey).put(newGroovyCommand);
+        return this;
     }
 
     /**
@@ -132,9 +138,10 @@ public class JenkinsXmlData {
      *            :: Description
      * @param trim
      *            :: Trim white spaces
+     * @return this JenkinsXmlData
      * @throws Exception
      */
-    public void addBuildParameter(String key, String defaultValue, String description, boolean trim) throws Exception {
+    public JenkinsXmlData addBuildParameter(String key, String defaultValue, String description, boolean trim) throws Exception {
         String parametertypeKey = "hudson.model.StringParameterDefinition";
 
         validatePropertiesObject(parametertypeKey);
@@ -147,6 +154,7 @@ public class JenkinsXmlData {
 
         properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
                 .getJSONArray(parametertypeKey).put(param);
+        return this;
     }
 
     /**
@@ -157,10 +165,12 @@ public class JenkinsXmlData {
      *
      * @param key
      *            :: The parameter key
+     * @return this JenkinsXmlData
      * @throws Exception
      */
-    public void addBuildParameter(String key) throws Exception {
+    public JenkinsXmlData addBuildParameter(String key) throws Exception {
         addBuildParameter(key, "", "", false);
+        return this;
     }
 
     /**
