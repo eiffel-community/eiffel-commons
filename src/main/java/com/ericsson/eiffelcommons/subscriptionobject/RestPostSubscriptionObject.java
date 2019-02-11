@@ -4,6 +4,11 @@ import java.io.IOException;
 
 public class RestPostSubscriptionObject extends SubscriptionObject {
 
+    /**
+     * Creates a subscriptionObject with REST/POST capabilities.
+     * @param subscriptionName
+     * @throws IOException
+     */
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
         super(subscriptionName);
 
