@@ -1,4 +1,4 @@
-package com.ericsson.ec.subscriptionobject;
+package com.ericsson.eiffelcommons.subscriptionobject;
 
 import java.io.IOException;
 

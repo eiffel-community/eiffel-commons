@@ -1,21 +1,19 @@
-package com.ericsson.ec.subscriptionobject;
+package com.ericsson.eiffelcommons.subscriptionobject;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.ericsson.eiffelcommons.utils.Utils;
 
 import lombok.Getter;
 
 abstract class SubscriptionObject {
     private static final String SUBSCRIPTION_TEMPLATE_PATH = "src/main/resources/subscriptionsTemplate.json";
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Getter
-    protected ObjectNode subscriptionJson;
+    protected JSONObject subscriptionJson;
 
     /**
      * Creates a subscription with a specific name.
@@ -23,8 +21,8 @@ abstract class SubscriptionObject {
      * @throws IOException
      */
     public SubscriptionObject(String subscriptionName) throws IOException {
-        URL subscriptionsInput = new File(SUBSCRIPTION_TEMPLATE_PATH).toURI().toURL();
-        subscriptionJson = (ObjectNode) objectMapper.readTree(subscriptionsInput);
+        String subscriptionTemplateString = Utils.getStringFromFile(SUBSCRIPTION_TEMPLATE_PATH);
+        subscriptionJson = new JSONObject(subscriptionTemplateString);
         subscriptionJson.put("subscriptionName", subscriptionName);
     }
 
@@ -34,13 +32,12 @@ abstract class SubscriptionObject {
      * @param notificationValue
      */
     public void addNotificationMessageKeyValue(String notificationKey, String notificationValue) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ObjectNode keyValue = objectMapper.createObjectNode();
+        JSONObject keyValue = new JSONObject();
         keyValue.put("formkey", notificationKey);
         keyValue.put("formvalue", notificationValue);
 
-        ArrayNode notificationMessageKeyValue = ((ArrayNode) subscriptionJson.get("notificationMessageKeyValues"));
-        notificationMessageKeyValue.add(keyValue);
+        JSONArray notificationMessageKeyValue = ((JSONArray) subscriptionJson.get("notificationMessageKeyValues"));
+        notificationMessageKeyValue.put(keyValue);
     }
 
     /**
@@ -48,9 +45,11 @@ abstract class SubscriptionObject {
      * @param requirementIndex
      * @param condition
      */
-    public void addConditionToRequirement(int requirementIndex, ObjectNode condition) {
-        ArrayNode requirement = ((ArrayNode) subscriptionJson.get("requirements").get(requirementIndex).get("conditions"));
-        requirement.add(condition);
+    public void addConditionToRequirement(int requirementIndex, JSONObject condition) {
+        JSONArray requirements = (JSONArray)subscriptionJson.get("requirements");
+        JSONObject requirement = (JSONObject)requirements.get(requirementIndex);
+        JSONArray conditions = (JSONArray) requirement.get("conditions");
+        conditions.put(condition);
     }
 
     /**
@@ -73,9 +72,9 @@ abstract class SubscriptionObject {
      * Returns the subscription as an array with the subscription. (This is the way Eiffel-intelligence stores it.)
      * @return ArrayNode
      */
-    public ArrayNode getAsSubscriptions() {
-        ArrayNode subscriptions = objectMapper.createArrayNode();
-        subscriptions.add(subscriptionJson);
+    public JSONArray getAsSubscriptions() {
+        JSONArray subscriptions = new JSONArray();
+        subscriptions.put(subscriptionJson);
 
         return subscriptions;
     }

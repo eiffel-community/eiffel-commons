@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.ec.helpers;
+package com.ericsson.eiffelcommons.helpers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
-import com.ericsson.ec.utils.Utils;
+import com.ericsson.eiffelcommons.utils.Utils;
 
 /**
  * This class is a builder for jenkins xml data string.
