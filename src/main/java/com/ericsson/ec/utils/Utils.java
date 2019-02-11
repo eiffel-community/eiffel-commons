@@ -16,10 +16,12 @@
 */
 package com.ericsson.ec.utils;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,35 +29,41 @@ import org.json.JSONObject;
 public class Utils {
 
     /**
-     * This function reads a file and returns the content as a JSONObject
+     * Return a resource file in string format.
      *
-     * @param filepath
+     * @param fileName
      * @return
-     * @throws IOException
+     * @throws FileNotFoundException
      */
-    public static JSONArray getJsonArrayFromFile(String filepath) throws IOException {
-        return new JSONArray(getStringFromFile(filepath));
+    public static String getResourceFileAsString(String fileName) throws FileNotFoundException {
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        if (inputStream != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+        }
+        throw new FileNotFoundException("Could not locate recourse file [" + fileName + "].");
     }
 
     /**
      * This function reads a file and returns the content as a JSONObject
      *
-     * @param filepath
+     * @param fileName
      * @return
      * @throws IOException
      */
-    public static JSONObject getJsonObjectFromFile(String filepath) throws IOException {
-        return new JSONObject(getStringFromFile(filepath));
+    public static JSONArray getResourceFileAsJsonArray(String fileName) throws FileNotFoundException {
+        return new JSONArray(getResourceFileAsString(fileName));
     }
 
     /**
-     * This function reads a file and returns the content as a String
+     * This function reads a file and returns the content as a JSONObject
      *
-     * @param filepath
+     * @param fileName
      * @return
      * @throws IOException
      */
-    public static String getStringFromFile(String filepath) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(filepath)), StandardCharsets.UTF_8);
+    public static JSONObject getResourceFileAsJsonObject(String fileName) throws FileNotFoundException {
+        return new JSONObject(getResourceFileAsString(fileName));
     }
 }
