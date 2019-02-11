@@ -27,9 +27,9 @@ public class SubscriptionObjectTest {
         condition.put("test", "'test'");
         restPostSubscription.addConditionToRequirement(0, condition);
 
-        JSONArray actualRequirement = (JSONArray) restPostSubscription.getSubscriptionJson()
-                .get("requirements");
-        JSONObject actualCondition = (JSONObject) actualRequirement.get(0);
+        JSONArray actualRequirement = restPostSubscription.getSubscriptionJson()
+                .getJSONArray("requirements");
+        JSONObject actualCondition = actualRequirement.getJSONObject(0);
 
         assertEquals("{\"conditions\":[{\"test\":\"'test'\"}]}", actualCondition.toString());
     }
@@ -38,8 +38,8 @@ public class SubscriptionObjectTest {
     public void testAddNotificationMessageKeyValue() {
         restPostSubscription.addNotificationMessageKeyValue("jmespath", "'test'");
 
-        JSONArray actualNotificationMessageKeyValue = (JSONArray) restPostSubscription.getSubscriptionJson()
-                .get("notificationMessageKeyValues");
+        JSONArray actualNotificationMessageKeyValue = restPostSubscription.getSubscriptionJson()
+                .getJSONArray("notificationMessageKeyValues");
         assertEquals("[{\"formkey\":\"jmespath\",\"formvalue\":\"'test'\"}]", actualNotificationMessageKeyValue.toString());
     }
 

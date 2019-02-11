@@ -35,7 +35,7 @@ abstract class SubscriptionObject {
         keyValue.put("formkey", notificationKey);
         keyValue.put("formvalue", notificationValue);
 
-        JSONArray notificationMessageKeyValue = ((JSONArray) subscriptionJson.get("notificationMessageKeyValues"));
+        JSONArray notificationMessageKeyValue = subscriptionJson.getJSONArray("notificationMessageKeyValues");
         notificationMessageKeyValue.put(keyValue);
     }
 
@@ -45,9 +45,9 @@ abstract class SubscriptionObject {
      * @param condition
      */
     public void addConditionToRequirement(int requirementIndex, JSONObject condition) {
-        JSONArray requirements = (JSONArray)subscriptionJson.get("requirements");
-        JSONObject requirement = (JSONObject)requirements.get(requirementIndex);
-        JSONArray conditions = (JSONArray) requirement.get("conditions");
+        JSONArray requirements =  subscriptionJson.getJSONArray("requirements");
+        JSONObject requirement = requirements.getJSONObject(requirementIndex);
+        JSONArray conditions = requirement.getJSONArray("conditions");
         conditions.put(condition);
     }
 
