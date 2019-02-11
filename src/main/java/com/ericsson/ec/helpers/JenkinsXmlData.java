@@ -16,7 +16,7 @@
 */
 package com.ericsson.ec.helpers;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -33,7 +33,7 @@ import com.ericsson.ec.utils.Utils;
  */
 public class JenkinsXmlData {
 
-    private static final String JENKINS_JOB_TEMPLATE_FILE_PATH = "/jenkinsJobTemplate.xml";
+    private static final String JENKINS_TEMPLATE_FILE_NAME = "jenkinsJobTemplate.xml";
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
     private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
     private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
@@ -47,9 +47,9 @@ public class JenkinsXmlData {
      *
      * @throws IOException
      */
-    public JenkinsXmlData() throws IOException {
-        String xmlDataString = Utils.getStringFromFile(JENKINS_JOB_TEMPLATE_FILE_PATH);
-        xmlJsonData = XML.toJSONObject(xmlDataString);
+    public JenkinsXmlData() throws FileNotFoundException {
+        String xmlJsonDataString  = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
+        xmlJsonData = XML.toJSONObject(xmlJsonDataString);
         builders = new JSONObject();
         properties = new JSONObject();
     }
