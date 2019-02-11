@@ -137,10 +137,7 @@ public class JenkinsManager {
      * @throws Exception
      */
     public boolean forceCreateJob(String jobName, String jobXmlData) throws Exception {
-        try {
-            deleteJob(jobName);
-        } catch (Exception e) {
-        }
+        deleteJob(jobName);
         return createJob(jobName, jobXmlData);
     }
 
@@ -479,17 +476,14 @@ public class JenkinsManager {
 
         long stopTime = System.currentTimeMillis() + 60000;
         do {
-            try {
-                Thread.sleep(3000);
-                response = httpRequest.performRequest();
-                serverDownRecieved = response.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE || serverDownRecieved;
-                success = response.getStatusCode() == HttpStatus.SC_OK || success;
-            } catch (Exception e) {
-            }
+            Thread.sleep(3000);
+            response = httpRequest.performRequest();
+            serverDownRecieved = response.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE || serverDownRecieved;
+            success = response.getStatusCode() == HttpStatus.SC_OK || success;
         } while (!success && stopTime > System.currentTimeMillis());
 
         if (!success) {
-            String message = "Could not verify tjat Jenkins started up correctly. Response code: " + response.getStatusCodeValue() + " and body: "
+            String message = "Could not verify that Jenkins started up correctly. Response code: " + response.getStatusCodeValue() + " and body: "
                     + response.getBody();
             throw new Exception(message);
         }

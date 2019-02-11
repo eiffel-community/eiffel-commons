@@ -12,16 +12,12 @@ import com.ericsson.ec.JenkinsManager;
 import com.ericsson.ec.helpers.JenkinsXmlData;
 
 /**
- * This test is executed as java application within Eclipse. This is not the
- * final test but to be used as inspiration for when tests are created for
- * jenkins manager. To be able to execute this application you need to have a
- * basic jenkins instance up and running. Currently we use jenkins started from
- * eiffel intelligence docker-compose file. This class is not to be regarded as
- * a final test for jenkinsmanager but a code hand over to the next person who
- * develop the tests.
+ * This test is executed as java application within Eclipse. This is not the final test but to be used as inspiration for when tests are created for
+ * jenkins manager. To be able to execute this application you need to have a basic jenkins instance up and running. Currently we use jenkins started
+ * from eiffel intelligence docker-compose file. This class is not to be regarded as a final test for jenkinsmanager but a code hand over to the next
+ * person who develop the tests.
  *
- * It also provide examples for how to use jenkins manager until documentation
- * has been created.
+ * It also provide examples for how to use jenkins manager until documentation has been created.
  *
  * @author Test
  *
@@ -34,10 +30,9 @@ public class JenkinsManagerExecutionTest {
     private static final String host = "localhost";
     private static final int port = 8081;
 
-    static List<String> testJobNameList = new ArrayList<>(
-            Arrays.asList("Test_Job1", "Test_Job2", "Test_Job3", "Test_Job4", "Test_Job5", "Test_Job6", "Test_Job7",
-                    "Test_Job8", "Test_Job9", "Test_Job10", "Test_Job11", "Test_Job12", "Test_Job13", "Test_Job14",
-                    "Test_Job15", "Test_Job16", "Test_Job17", "Test_Job18", "Test_Job19", "Test_Job20"));
+    static List<String> testJobNameList = new ArrayList<>(Arrays.asList("Test_Job1", "Test_Job2", "Test_Job3", "Test_Job4", "Test_Job5", "Test_Job6",
+            "Test_Job7", "Test_Job8", "Test_Job9", "Test_Job10", "Test_Job11", "Test_Job12", "Test_Job13", "Test_Job14", "Test_Job15", "Test_Job16",
+            "Test_Job17", "Test_Job18", "Test_Job19", "Test_Job20"));
     static JenkinsManager jenkinsManager;
 
     public static void main(String[] args) throws Exception {
@@ -131,7 +126,6 @@ public class JenkinsManagerExecutionTest {
 
         pluginExists = jenkinsManager.pluginExists(plugin);
         System.out.println("Jenkins plugin [ " + plugin + " ] exists ::: " + pluginExists);
-
     }
 
 }

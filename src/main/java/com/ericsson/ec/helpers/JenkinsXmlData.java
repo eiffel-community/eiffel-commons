@@ -59,8 +59,10 @@ public class JenkinsXmlData {
      * @return
      */
     public String getXmlAsString() {
-        xmlJsonData.getJSONObject("project").put("builders", builders);
-        xmlJsonData.getJSONObject("project").put("properties", properties);
+        xmlJsonData.getJSONObject("project")
+                   .put("builders", builders);
+        xmlJsonData.getJSONObject("project")
+                   .put("properties", properties);
 
         String xmlDataString = XML.toString(xmlJsonData);
         xmlDataString = removeExtraGroovyParams(xmlDataString);
@@ -75,7 +77,8 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      */
     public JenkinsXmlData addJobToken(String token) {
-        xmlJsonData.getJSONObject("project").put("authToken", token);
+        xmlJsonData.getJSONObject("project")
+                   .put("authToken", token);
         return this;
     }
 
@@ -97,7 +100,8 @@ public class JenkinsXmlData {
         JSONObject newCommand = new JSONObject();
         newCommand.put("command", script);
 
-        builders.getJSONArray(husdonShellKey).put(newCommand);
+        builders.getJSONArray(husdonShellKey)
+                .put(newCommand);
         return this;
     }
 
@@ -118,7 +122,8 @@ public class JenkinsXmlData {
 
         JSONObject newGroovyCommand = BuildGroovyObject(script);
 
-        builders.getJSONArray(hudsonGroovyKey).put(newGroovyCommand);
+        builders.getJSONArray(hudsonGroovyKey)
+                .put(newGroovyCommand);
         return this;
     }
 
@@ -148,7 +153,10 @@ public class JenkinsXmlData {
         param.put("defaultValue", defaultValue);
         param.put("trim", false);
 
-        properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY).getJSONArray(parametertypeKey).put(param);
+        properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                  .getJSONObject(PARAMETER_DEFINITION_KEY)
+                  .getJSONArray(parametertypeKey)
+                  .put(param);
         return this;
     }
 
@@ -179,17 +187,22 @@ public class JenkinsXmlData {
             properties.put(HUDSON_PARAMETERS_DEFINITION_KEY, parametersDefinitionProperty);
         }
 
-        boolean hasParameterDefinitions = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).has(PARAMETER_DEFINITION_KEY);
+        boolean hasParameterDefinitions = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                                                    .has(PARAMETER_DEFINITION_KEY);
         if (!hasParameterDefinitions) {
             JSONObject parameterDefinitions = new JSONObject();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).put(PARAMETER_DEFINITION_KEY, parameterDefinitions);
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                      .put(PARAMETER_DEFINITION_KEY, parameterDefinitions);
         }
 
-        boolean hasParametertypeKey = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
-                .has(parametertypeKey);
+        boolean hasParametertypeKey = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                                                .getJSONObject(PARAMETER_DEFINITION_KEY)
+                                                .has(parametertypeKey);
         if (!hasParametertypeKey) {
             JSONArray parametertype = new JSONArray();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY).put(parametertypeKey, parametertype);
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                      .getJSONObject(PARAMETER_DEFINITION_KEY)
+                      .put(parametertypeKey, parametertype);
         }
     }
 
