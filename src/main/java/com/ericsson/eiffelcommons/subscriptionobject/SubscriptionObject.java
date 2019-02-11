@@ -10,7 +10,7 @@ import com.ericsson.eiffelcommons.utils.Utils;
 import lombok.Getter;
 
 abstract class SubscriptionObject {
-    private static final String SUBSCRIPTION_TEMPLATE_PATH = "src/main/resources/subscriptionsTemplate.json";
+    private static final String SUBSCRIPTION_TEMPLATE_PATH = "subscriptionsTemplate.json";
 
     @Getter
     protected JSONObject subscriptionJson;
@@ -21,8 +21,7 @@ abstract class SubscriptionObject {
      * @throws IOException
      */
     public SubscriptionObject(String subscriptionName) throws IOException {
-        String subscriptionTemplateString = Utils.getStringFromFile(SUBSCRIPTION_TEMPLATE_PATH);
-        subscriptionJson = new JSONObject(subscriptionTemplateString);
+        subscriptionJson = Utils.getResourceFileAsJsonObject(SUBSCRIPTION_TEMPLATE_PATH);
         subscriptionJson.put("subscriptionName", subscriptionName);
     }
 
