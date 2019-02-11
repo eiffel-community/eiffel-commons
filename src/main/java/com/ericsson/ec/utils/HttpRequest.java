@@ -62,23 +62,23 @@ public class HttpRequest {
         params = new HashMap<>();
 
         switch (method) {
-        case POST:
-            request = new HttpPost();
-            break;
-        case GET:
-            request = new HttpGet();
-            break;
-        case DELETE:
-            request = new HttpDelete();
-            break;
-        case PUT:
-            request = new HttpPut();
-            break;
+            case POST:
+                request = new HttpPost();
+                break;
+            case GET:
+                request = new HttpGet();
+                break;
+            case DELETE:
+                request = new HttpDelete();
+                break;
+            case PUT:
+                request = new HttpPut();
+                break;
         }
     }
 
     /**
-     * Function that clean parameters field only.
+     * Function that cleans the parameters field.
      */
     public void cleanParams() {
         params.clear();
@@ -93,10 +93,12 @@ public class HttpRequest {
     }
 
     /**
-     * Function for adding headers to the http request.
+     * Function the adds a header to the http request.
      *
-     * @param key   :: the key of the header
-     * @param value :: the value of the header
+     * @param key
+     *            :: the key of the header
+     * @param value
+     *            :: the value of the header
      * @return
      */
     public HttpRequest addHeader(String key, String value) {
@@ -105,9 +107,20 @@ public class HttpRequest {
     }
 
     /**
-     * Function for adding parameters to the http request.
+     * Takes a header key as input and removes that key and value from the list of headers.
      *
-     * @param parameters  :: List<NameValuePair>
+     * @param headerKey
+     *            :: the header to remove
+     */
+    public void removeHeader(String headerKey) {
+        request.removeHeaders(headerKey);
+    }
+
+    /**
+     * Function that adds multiple parameters to the http request.
+     *
+     * @param parameters
+     *            :: List<NameValuePair>
      */
     public void addParameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -116,10 +129,12 @@ public class HttpRequest {
     }
 
     /**
-     * Function for adding parameters to the http request.
+     * Function that adds a parameter to the http request.
      *
-     * @param key   :: the key of the parameter
-     * @param value :: the value of the parameter
+     * @param key
+     *            :: the key of the parameter
+     * @param value
+     *            :: the value of the parameter
      * @return
      */
     public HttpRequest addParam(String key, String value) {
@@ -128,9 +143,10 @@ public class HttpRequest {
     }
 
     /**
-     * Function that set the body of the http request.
+     * Function that sets the body of the http request.
      *
-     * @param body   :: String input
+     * @param body
+     *            :: String input
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body) {
@@ -139,9 +155,10 @@ public class HttpRequest {
     }
 
     /**
-     * Function that set the body of the http request.
+     * Function that sets the body of the http request.
      *
-     * @param file   :: File input
+     * @param file
+     *            :: File input
      * @return HTTPRequest
      * @throws IOException
      */
@@ -150,15 +167,15 @@ public class HttpRequest {
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: "
-                    + e.getMessage();
+            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: " + e.getMessage();
             throw new IOException(message);
         }
         return setBody(fileContent);
     }
 
     /**
-     * Function that execute http request.
+     * Function that executes the http request.
+     *
      * @return ResponseEntity, the response of the performed http
      * @throws URISyntaxException
      * @throws IOException

@@ -34,6 +34,7 @@ public class ResponseEntity {
 
     /**
      * Creates a ResponseEntity from a HttpResponse as input.
+     *
      * @param httpResponse
      * @throws ParseException
      * @throws IOException
@@ -46,6 +47,7 @@ public class ResponseEntity {
 
     /**
      * Creates a ResponseEntity with given parameters.
+     *
      * @param statusCode
      * @param body
      * @param headers
