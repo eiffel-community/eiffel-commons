@@ -105,12 +105,12 @@ public class JenkinsManager {
         }
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.APPLICATION_XML)
-                    .addHeader("Jenkins-Crumb", crumb)
-                    .addParam("name", jobName)
-                    .setBody(jobXmlData)
-                    .setEndpoint("/createItem");
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.APPLICATION_XML)
+                   .addHeader("Jenkins-Crumb", crumb)
+                   .addParam("name", jobName)
+                   .setBody(jobXmlData)
+                   .setEndpoint("/createItem");
 
         ResponseEntity response = httpRequest.performRequest();
         success = response.getStatusCode() == HttpStatus.SC_OK;
@@ -223,9 +223,9 @@ public class JenkinsManager {
         String endpoint = "/job/" + jobName + "/" + buildNumberString + "/api/json";
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.APPLICATION_JSON)
-                    .setEndpoint(endpoint);
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                   .setEndpoint(endpoint);
 
         ResponseEntity response = httpRequest.performRequest();
         dataRecieved = response.getStatusCode() == HttpStatus.SC_OK;
@@ -271,10 +271,10 @@ public class JenkinsManager {
         String endpoint = "/job/" + jobName + "/doDelete";
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.APPLICATION_JSON)
-                    .addHeader("Jenkins-Crumb", crumb)
-                    .setEndpoint(endpoint);
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                   .addHeader("Jenkins-Crumb", crumb)
+                   .setEndpoint(endpoint);
 
         ResponseEntity response = httpRequest.performRequest();
         isDeleted = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
@@ -300,10 +300,10 @@ public class JenkinsManager {
 
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addParam("depth", "1")
-                    .addParam("wrapper", "plugins")
-                    .setEndpoint("/pluginManager/api/json");
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addParam("depth", "1")
+                   .addParam("wrapper", "plugins")
+                   .setEndpoint("/pluginManager/api/json");
 
         ResponseEntity response = httpRequest.performRequest();
         boolean success = response.getStatusCode() == HttpStatus.SC_OK;
@@ -317,7 +317,8 @@ public class JenkinsManager {
         JSONArray pluginList = responseData.getJSONArray("plugins");
 
         for (int i = 0; i < pluginList.length(); i++) {
-            String foundPlugin = pluginList.getJSONObject(i).getString("shortName");
+            String foundPlugin = pluginList.getJSONObject(i)
+                                           .getString("shortName");
             if (plugin.equalsIgnoreCase(foundPlugin)) {
                 pluginExists = true;
                 break;
@@ -351,11 +352,11 @@ public class JenkinsManager {
         String scriptData = "<jenkins><install plugin='" + plugin + "@" + version + "' /></jenkins>";
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.TEXT_XML)
-                    .addHeader("Jenkins-Crumb", crumb)
-                    .setBody(scriptData)
-                    .setEndpoint("/pluginManager/installNecessaryPlugins");
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.TEXT_XML)
+                   .addHeader("Jenkins-Crumb", crumb)
+                   .setBody(scriptData)
+                   .setEndpoint("/pluginManager/installNecessaryPlugins");
 
         ResponseEntity response = httpRequest.performRequest();
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
@@ -382,10 +383,10 @@ public class JenkinsManager {
         ResponseEntity response = null;
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.APPLICATION_JSON)
-                    .addHeader("Jenkins-Crumb", crumb)
-                    .setEndpoint("/safeRestart");
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                   .addHeader("Jenkins-Crumb", crumb)
+                   .setEndpoint("/safeRestart");
 
         response = httpRequest.performRequest();
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
@@ -412,7 +413,8 @@ public class JenkinsManager {
      * @return
      * @throws Exception
      */
-    private boolean executeJobTriggering(String jobName, String jobToken, String buildType, String mediatype, Map<String, String> parameters, String body)
+    private boolean executeJobTriggering(String jobName, String jobToken, String buildType, String mediatype, Map<String, String> parameters,
+                                         String body)
             throws Exception {
         jobNameTokenValidation(jobName, jobToken);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
@@ -426,10 +428,10 @@ public class JenkinsManager {
         }
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", mediatype)
-                    .addParam("token", jobToken)
-                    .setEndpoint(endpoint);
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", mediatype)
+                   .addParam("token", jobToken)
+                   .setEndpoint(endpoint);
 
         ResponseEntity response = httpRequest.performRequest();
         Boolean success = response.getStatusCode() == HttpStatus.SC_CREATED;
@@ -471,7 +473,9 @@ public class JenkinsManager {
         ResponseEntity response = null;
 
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
-        httpRequest.setBaseUrl(jenkinsBaseUrl).addHeader("Authorization", "Basic " + encoding).setEndpoint("/api/json");
+        httpRequest.setBaseUrl(jenkinsBaseUrl)
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .setEndpoint("/api/json");
 
         long stopTime = System.currentTimeMillis() + 60000;
         do {
@@ -521,9 +525,9 @@ public class JenkinsManager {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
-                    .addHeader("Authorization", "Basic " + encoding)
-                    .addHeader("Content-type", MediaType.APPLICATION_JSON)
-                    .setEndpoint("/crumbIssuer/api/json");
+                   .addHeader("Authorization", "Basic " + encoding)
+                   .addHeader("Content-type", MediaType.APPLICATION_JSON)
+                   .setEndpoint("/crumbIssuer/api/json");
 
         ResponseEntity response = httpRequest.performRequest();
         boolean success = response.getStatusCode() == HttpStatus.SC_OK;
