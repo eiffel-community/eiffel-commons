@@ -1,13 +1,12 @@
-
 {
   "notificationMeta" : "",
   "notificationType" : "",
   "notificationMessageKeyValues" : [],
   "repeat" : false,
-  "requirements" : [ 
-      {
-          "conditions" : []
-      }
+  "requirements" : [
+    {
+      "conditions" : []
+    }
   ],
   "subscriptionName" : "",
   "ldapUserName" : "",
@@ -15,4 +14,3 @@
   "authenticationType" : "NO_AUTH",
   "aggregationtype" : "eiffel-intelligence"
 }
-
