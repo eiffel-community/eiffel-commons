@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.ec;
+package com.ericsson.eiffelcommons;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,10 +29,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.ericsson.ec.helpers.MediaType;
-import com.ericsson.ec.utils.HttpRequest;
-import com.ericsson.ec.utils.ResponseEntity;
-import com.ericsson.ec.utils.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.helpers.MediaType;
+import com.ericsson.eiffelcommons.utils.HttpRequest;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
+import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
 
 public class JenkinsManager {
 
