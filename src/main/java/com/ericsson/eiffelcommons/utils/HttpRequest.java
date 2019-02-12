@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.ec.utils;
+package com.ericsson.eiffelcommons.utils;
 
 import java.io.File;
 import java.io.IOException;
