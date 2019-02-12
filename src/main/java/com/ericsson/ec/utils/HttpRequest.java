@@ -167,7 +167,8 @@ public class HttpRequest {
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: " + e.getMessage();
+            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: "
+                    + e.getMessage();
             throw new IOException(message);
         }
         return setBody(fileContent);

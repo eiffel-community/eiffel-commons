@@ -48,7 +48,7 @@ public class JenkinsXmlData {
      * @throws IOException
      */
     public JenkinsXmlData() throws FileNotFoundException {
-        String xmlJsonDataString  = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
+        String xmlJsonDataString = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
         xmlJsonData = XML.toJSONObject(xmlJsonDataString);
         builders = new JSONObject();
         properties = new JSONObject();
@@ -129,8 +129,8 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive, currently only String.class and
-     * boolean.class is supported.
+     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive,
+     * currently only String.class and boolean.class is supported.
      *
      * @param key
      *            :: The parameter key
@@ -143,7 +143,8 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      * @throws Exception
      */
-    public JenkinsXmlData addBuildParameter(String key, String defaultValue, String description, boolean trim) throws Exception {
+    public JenkinsXmlData addBuildParameter(String key, String defaultValue, String description, boolean trim)
+            throws Exception {
         String parametertypeKey = "hudson.model.StringParameterDefinition";
 
         validatePropertiesObject(parametertypeKey);
@@ -162,8 +163,8 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive, currently only String.class and
-     * boolean.class is supported. No default value, no description and trim false
+     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive,
+     * currently only String.class and boolean.class is supported. No default value, no description and trim false
      *
      * @param key
      *            :: The parameter key
@@ -176,8 +177,9 @@ public class JenkinsXmlData {
     }
 
     /**
-     * Ensures the XML properties is added correctly, should be <hudson.model.ParametersDefinitionProperty> <parameterDefinitions>
-     * <our-input-parameter-typ> </our-input-parameter-typ> </parameterDefinitions> </hudson.model.ParametersDefinitionProperty>
+     * Ensures the XML properties is added correctly, should be <hudson.model.ParametersDefinitionProperty>
+     * <parameterDefinitions> <our-input-parameter-typ> </our-input-parameter-typ> </parameterDefinitions>
+     * </hudson.model.ParametersDefinitionProperty>
      *
      * @param parametertypeKey
      */
@@ -230,16 +232,18 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function removes the params given in the groove start node from tne end node <abc param='abc'></abc param='def'> becomes
-     * <abc param='def'></abc>
+     * This function removes the params given in the groove start node from tne end node
+     * <abc param='abc'></abc param='def'> becomes <abc param='def'></abc>
      *
      * @param xmlDataString
      * @return
      */
     private String removeExtraGroovyParams(String xmlDataString) {
-        xmlDataString = xmlDataString.replaceAll("\\<\\/hudson\\.plugins\\.groovy\\.Groovy\\ plugin\\=\\'groovy\\@2\\.1\\'",
+        xmlDataString = xmlDataString.replaceAll(
+                "\\<\\/hudson\\.plugins\\.groovy\\.Groovy\\ plugin\\=\\'groovy\\@2\\.1\\'",
                 "</hudson.plugins.groovy.Groovy>");
-        xmlDataString = xmlDataString.replaceAll("\\<\\/scriptSource\\ class\\=\\'hudson\\.plugins\\.groovy\\.StringScriptSource\\'\\>",
+        xmlDataString = xmlDataString.replaceAll(
+                "\\<\\/scriptSource\\ class\\=\\'hudson\\.plugins\\.groovy\\.StringScriptSource\\'\\>",
                 "</scriptSource>");
         return xmlDataString;
     }
