@@ -9,7 +9,7 @@ import com.ericsson.eiffelcommons.utils.Utils;
 
 import lombok.Getter;
 
-abstract class SubscriptionObject {
+public abstract class SubscriptionObject {
     private static final String SUBSCRIPTION_TEMPLATE_PATH = "subscriptionsTemplate.json";
 
     @Getter
