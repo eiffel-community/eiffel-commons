@@ -78,6 +78,22 @@ public class HttpRequest {
     }
 
     /**
+     * Gets the base url(not including endpoint) for example: http://localhost:8080
+     * @return String
+     */
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    /**
+     * Sets the base url(not including endpoint) for example: http://localhost:8080
+     * @param baseUrl
+     */
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    /**
      * Function that cleans the parameters field.
      */
     public void cleanParams() {
