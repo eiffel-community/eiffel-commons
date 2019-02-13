@@ -64,12 +64,6 @@ public class Utils {
      * @throws IOException
      */
     public static JSONObject getResourceFileAsJsonObject(String fileName) throws FileNotFoundException {
-        System.out.println("#########################");
-        System.out.println("#########################");
-        System.out.println("#########################");
-        System.out.println("#########################");
-        System.out.println("### " + getResourceFileAsString(fileName));
-
         return new JSONObject(getResourceFileAsString(fileName));
     }
 }
