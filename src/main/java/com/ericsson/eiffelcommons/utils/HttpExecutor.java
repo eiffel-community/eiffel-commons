@@ -27,14 +27,15 @@ import org.apache.http.impl.client.HttpClientBuilder;
 public final class HttpExecutor {
 
     private static HttpExecutor instance;
-    private CloseableHttpClient client = HttpClientBuilder.create().build();
+    private CloseableHttpClient client = HttpClientBuilder.create()
+                                                          .build();
 
     private HttpExecutor() {
 
     }
 
     public static HttpExecutor getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new HttpExecutor();
         }
 
@@ -51,24 +52,23 @@ public final class HttpExecutor {
             this.client.close();
 
         }
-        this.client = HttpClientBuilder.create().build();
+        this.client = HttpClientBuilder.create()
+                                       .build();
     }
 
     /**
      * Handle the response from a HTTP request
+     *
      * @param request
-     *      A HTTP request method, e.g. httpGet, httpPost
-     * @return ResponseEntity
-     *      containing the json content of the http response and status code from request
+     *            :: A HTTP request method, e.g. httpGet, httpPost
+     * @return ResponseEntity containing the json content of the http response and status code from request
      * @throws IOException
      * @throws ClientProtocolException
-     * */
+     */
     public ResponseEntity executeRequest(HttpRequestBase request) throws ClientProtocolException, IOException {
         HttpResponse httpResponse = null;
 
         httpResponse = client.execute(request);
         return new ResponseEntity(httpResponse);
-
-
     }
 }

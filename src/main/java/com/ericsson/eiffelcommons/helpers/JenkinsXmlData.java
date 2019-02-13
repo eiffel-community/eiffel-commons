@@ -48,21 +48,22 @@ public class JenkinsXmlData {
      * @throws IOException
      */
     public JenkinsXmlData() throws FileNotFoundException {
-        String xmlJsonDataString  = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
+        String xmlJsonDataString = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
         xmlJsonData = XML.toJSONObject(xmlJsonDataString);
         builders = new JSONObject();
         properties = new JSONObject();
     }
 
     /**
-     * This function converts xmlJsonData to XML format and adds the xml version
-     * tag.
+     * This function converts xmlJsonData to XML format and adds the xml version tag.
      *
      * @return
      */
     public String getXmlAsString() {
-        xmlJsonData.getJSONObject("project").put("builders", builders);
-        xmlJsonData.getJSONObject("project").put("properties", properties);
+        xmlJsonData.getJSONObject("project")
+                   .put("builders", builders);
+        xmlJsonData.getJSONObject("project")
+                   .put("properties", properties);
 
         String xmlDataString = XML.toString(xmlJsonData);
         xmlDataString = removeExtraGroovyParams(xmlDataString);
@@ -77,7 +78,8 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      */
     public JenkinsXmlData addJobToken(String token) {
-        xmlJsonData.getJSONObject("project").put("authToken", token);
+        xmlJsonData.getJSONObject("project")
+                   .put("authToken", token);
         return this;
     }
 
@@ -99,7 +101,8 @@ public class JenkinsXmlData {
         JSONObject newCommand = new JSONObject();
         newCommand.put("command", script);
 
-        builders.getJSONArray(husdonShellKey).put(newCommand);
+        builders.getJSONArray(husdonShellKey)
+                .put(newCommand);
         return this;
     }
 
@@ -120,14 +123,14 @@ public class JenkinsXmlData {
 
         JSONObject newGroovyCommand = BuildGroovyObject(script);
 
-        builders.getJSONArray(hudsonGroovyKey).put(newGroovyCommand);
+        builders.getJSONArray(hudsonGroovyKey)
+                .put(newGroovyCommand);
         return this;
     }
 
     /**
-     * This function adds a parameter key to the job data, the user must specify
-     * what type the parameter will receive, currently only String.class and
-     * boolean.class is supported.
+     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive,
+     * currently only String.class and boolean.class is supported.
      *
      * @param key
      *            :: The parameter key
@@ -140,7 +143,8 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      * @throws Exception
      */
-    public JenkinsXmlData addBuildParameter(String key, String defaultValue, String description, boolean trim) throws Exception {
+    public JenkinsXmlData addBuildParameter(String key, String defaultValue, String description, boolean trim)
+            throws Exception {
         String parametertypeKey = "hudson.model.StringParameterDefinition";
 
         validatePropertiesObject(parametertypeKey);
@@ -151,16 +155,16 @@ public class JenkinsXmlData {
         param.put("defaultValue", defaultValue);
         param.put("trim", false);
 
-        properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
-                .getJSONArray(parametertypeKey).put(param);
+        properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                  .getJSONObject(PARAMETER_DEFINITION_KEY)
+                  .getJSONArray(parametertypeKey)
+                  .put(param);
         return this;
     }
 
     /**
-     * This function adds a parameter key to the job data, the user must specify
-     * what type the parameter will receive, currently only String.class and
-     * boolean.class is supported. No default value, no description and trim
-     * false
+     * This function adds a parameter key to the job data, the user must specify what type the parameter will receive,
+     * currently only String.class and boolean.class is supported. No default value, no description and trim false
      *
      * @param key
      *            :: The parameter key
@@ -173,10 +177,9 @@ public class JenkinsXmlData {
     }
 
     /**
-     * Ensures the XML properties is added correctly, should be
-     * <hudson.model.ParametersDefinitionProperty> <parameterDefinitions>
-     * <our-input-parameter-typ> </our-input-parameter-typ>
-     * </parameterDefinitions> </hudson.model.ParametersDefinitionProperty>
+     * Ensures the XML properties is added correctly, should be <hudson.model.ParametersDefinitionProperty>
+     * <parameterDefinitions> <our-input-parameter-typ> </our-input-parameter-typ> </parameterDefinitions>
+     * </hudson.model.ParametersDefinitionProperty>
      *
      * @param parametertypeKey
      */
@@ -188,19 +191,21 @@ public class JenkinsXmlData {
         }
 
         boolean hasParameterDefinitions = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
-                .has(PARAMETER_DEFINITION_KEY);
+                                                    .has(PARAMETER_DEFINITION_KEY);
         if (!hasParameterDefinitions) {
             JSONObject parameterDefinitions = new JSONObject();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).put(PARAMETER_DEFINITION_KEY,
-                    parameterDefinitions);
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                      .put(PARAMETER_DEFINITION_KEY, parameterDefinitions);
         }
 
         boolean hasParametertypeKey = properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
-                .getJSONObject(PARAMETER_DEFINITION_KEY).has(parametertypeKey);
+                                                .getJSONObject(PARAMETER_DEFINITION_KEY)
+                                                .has(parametertypeKey);
         if (!hasParametertypeKey) {
             JSONArray parametertype = new JSONArray();
-            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY).getJSONObject(PARAMETER_DEFINITION_KEY)
-                    .put(parametertypeKey, parametertype);
+            properties.getJSONObject(HUDSON_PARAMETERS_DEFINITION_KEY)
+                      .getJSONObject(PARAMETER_DEFINITION_KEY)
+                      .put(parametertypeKey, parametertype);
         }
     }
 
@@ -227,9 +232,8 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function removes the params given in the groove start node from tne
-     * end node <abc param='abc'></abc param='def'> becomes
-     * <abc param='def'></abc>
+     * This function removes the params given in the groove start node from tne end node
+     * <abc param='abc'></abc param='def'> becomes <abc param='def'></abc>
      *
      * @param xmlDataString
      * @return

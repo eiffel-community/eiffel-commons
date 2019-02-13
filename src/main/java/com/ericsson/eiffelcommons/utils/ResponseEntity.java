@@ -34,18 +34,21 @@ public class ResponseEntity {
 
     /**
      * Creates a ResponseEntity from a HttpResponse as input.
+     *
      * @param httpResponse
      * @throws ParseException
      * @throws IOException
      */
     public ResponseEntity(HttpResponse httpResponse) throws ParseException, IOException {
-        this.statusCode = httpResponse.getStatusLine().getStatusCode();
+        this.statusCode = httpResponse.getStatusLine()
+                                      .getStatusCode();
         this.body = EntityUtils.toString(httpResponse.getEntity(), "utf-8");
         this.headers = httpResponse.getAllHeaders();
     }
 
     /**
      * Creates a ResponseEntity with given parameters.
+     *
      * @param statusCode
      * @param body
      * @param headers

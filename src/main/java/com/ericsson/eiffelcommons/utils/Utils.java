@@ -40,7 +40,8 @@ public class Utils {
         InputStream inputStream = classLoader.getResourceAsStream(fileName);
         if (inputStream != null) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            return reader.lines().collect(Collectors.joining(System.lineSeparator()));
+            return reader.lines()
+                         .collect(Collectors.joining(System.lineSeparator()));
         }
         throw new FileNotFoundException("Could not locate recourse file [" + fileName + "].");
     }
