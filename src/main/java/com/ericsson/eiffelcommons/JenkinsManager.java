@@ -31,8 +31,8 @@ import org.json.JSONObject;
 
 import com.ericsson.eiffelcommons.helpers.MediaType;
 import com.ericsson.eiffelcommons.utils.HttpRequest;
-import com.ericsson.eiffelcommons.utils.ResponseEntity;
 import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
+import com.ericsson.eiffelcommons.utils.ResponseEntity;
 
 public class JenkinsManager {
 
@@ -137,7 +137,10 @@ public class JenkinsManager {
      * @throws Exception
      */
     public boolean forceCreateJob(String jobName, String jobXmlData) throws Exception {
-        deleteJob(jobName);
+        try {
+            deleteJob(jobName);
+        } catch(Exception e) {}
+
         return createJob(jobName, jobXmlData);
     }
 
