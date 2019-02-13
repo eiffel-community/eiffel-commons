@@ -47,8 +47,6 @@ public class HttpRequest {
         GET, POST, DELETE, PUT
     }
 
-    @Getter
-    @Setter
     protected String baseUrl;
 
     @Getter
@@ -89,8 +87,9 @@ public class HttpRequest {
      * Sets the base url(not including endpoint) for example: http://localhost:8080
      * @param baseUrl
      */
-    public void setBaseUrl(String baseUrl) {
+    public HttpRequest setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+        return this;
     }
 
     /**
