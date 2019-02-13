@@ -542,7 +542,6 @@ public class JenkinsManager {
         if (success) {
             JSONObject jsonObj = new JSONObject(response.getBody());
             crumb = jsonObj.getString("crumb");
-            System.out.println(crumb);
         }
 
         return crumb;
