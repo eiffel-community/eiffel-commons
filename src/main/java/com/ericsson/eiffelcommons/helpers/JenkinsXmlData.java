@@ -129,6 +129,36 @@ public class JenkinsXmlData {
     }
 
     /**
+     * This function adds system groovy script to the XML data.
+     *
+     * @param script
+     * @param sandbox
+     * @return this JenkinsXmlData
+     * @throws Exception
+     */
+    public JenkinsXmlData addSystemGrovyScript(String script, boolean sandbox) throws Exception {
+        String hudsonSystemGroovyKey = "hudson.plugins.groovy.SystemGroovy plugin='groovy@2.1'";
+
+        boolean hasKeyGroovy = builders.has(hudsonSystemGroovyKey);
+
+        if (!hasKeyGroovy) {
+            JSONArray hudsonSystemGroovy = new JSONArray();
+            builders.put(hudsonSystemGroovyKey, hudsonSystemGroovy);
+        } else {
+            throw new Exception("Currently only one system Groovy script supported.");
+        }
+        JSONObject systemGroovyScript = buildSystemGroovyObject(script, sandbox);
+
+        JSONArray systemGroovyContainer = new JSONArray();
+        systemGroovyContainer.put(systemGroovyScript);
+
+        builders.getJSONArray(hudsonSystemGroovyKey)
+                .put(systemGroovyScript);
+
+        return this;
+    }
+
+    /**
      * This function adds a parameter key to the job data, the user must specify what type the parameter will receive,
      * currently only String.class and boolean.class is supported.
      *
@@ -210,7 +240,7 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function creates the croovy script structure needed by jenkins.
+     * This function creates the Groovy script structure needed by jenkins.
      *
      * @param script
      * @return
@@ -232,6 +262,33 @@ public class JenkinsXmlData {
     }
 
     /**
+     * This function creates the System Groovy script structure needed by jenkins.
+     *
+     * @param script
+     * @param sandbox
+     * @return
+     */
+    private JSONObject buildSystemGroovyObject(String script, boolean sandbox) {
+        String systemGroovySourceKey = "source class='hudson.plugins.groovy.StringSystemScriptSource'";
+        String systemGroovyScriptKey = "script plugin='script-security@1.52'";
+
+        JSONObject systemGroovyScriptValues = new JSONObject();
+        systemGroovyScriptValues.put("script", script);
+        systemGroovyScriptValues.put("sandbox", sandbox);
+
+        JSONArray systemGroovyScriptArray = new JSONArray();
+        systemGroovyScriptArray.put(systemGroovyScriptValues);
+
+        JSONObject systemGroovyScriptObject = new JSONObject();
+        systemGroovyScriptObject.put(systemGroovyScriptKey, systemGroovyScriptArray);
+
+        JSONObject systemGroovySource = new JSONObject();
+        systemGroovySource.put(systemGroovySourceKey, systemGroovyScriptObject);
+
+        return systemGroovySource;
+    }
+
+    /**
      * This function removes the params given in the groove start node from tne end node
      * <abc param='abc'></abc param='def'> becomes <abc param='def'></abc>
      *
@@ -245,6 +302,16 @@ public class JenkinsXmlData {
         xmlDataString = xmlDataString.replaceAll(
                 "\\<\\/scriptSource\\ class\\=\\'hudson\\.plugins\\.groovy\\.StringScriptSource\\'\\>",
                 "</scriptSource>");
+
+        xmlDataString = xmlDataString.replaceAll(
+                "\\<\\/hudson\\.plugins\\.groovy\\.SystemGroovy plugin\\=\\'groovy@2\\.1\\'\\>",
+                "</hudson.plugins.groovy.SystemGroovy>");
+        xmlDataString = xmlDataString.replaceAll(
+                "\\<\\/source class\\=\\'hudson\\.plugins\\.groovy\\.StringSystemScriptSource\\'\\>",
+                "</source>");
+        xmlDataString = xmlDataString.replaceAll(
+                "\\<\\/script plugin\\=\\'script\\-security\\@1\\.51\\'\\>",
+                "</script>");
         return xmlDataString;
     }
 
