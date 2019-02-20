@@ -40,7 +40,7 @@ public class JenkinsXmlData {
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
     private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
     private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
-    private static final String GROOVY_SCRIPT_SCRIPT_PLUGIN_VERSION = "2.1";
+    private static final String GROOVY_SCRIPT_PLUGIN_VERSION = "2.1";
     private static final String GROOVY_SCRIPT_SECURITY_PLUGIN_VERSION = "1.51";
 
     private String hudsonPluginsGroovyGroovyKey = "hudson.plugins.groovy.Groovy plugin='groovy@%s'";
@@ -125,7 +125,7 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      */
     public JenkinsXmlData addGrovyScript(String script) {
-        hudsonPluginsGroovyGroovyKey = String.format(hudsonPluginsGroovyGroovyKey, GROOVY_SCRIPT_SCRIPT_PLUGIN_VERSION);
+        hudsonPluginsGroovyGroovyKey = String.format(hudsonPluginsGroovyGroovyKey, GROOVY_SCRIPT_PLUGIN_VERSION);
 
         boolean hasKeyGroovy = builders.has(hudsonPluginsGroovyGroovyKey);
         if (!hasKeyGroovy) {
@@ -151,7 +151,7 @@ public class JenkinsXmlData {
      */
     public JenkinsXmlData addSystemGrovyScript(String script, boolean sandbox) throws Exception {
         hudsonPluginGroovySystemGroovyKey = String.format(hudsonPluginGroovySystemGroovyKey,
-                GROOVY_SCRIPT_SCRIPT_PLUGIN_VERSION);
+                GROOVY_SCRIPT_PLUGIN_VERSION);
 
         boolean hasKeyGroovy = builders.has(hudsonPluginGroovySystemGroovyKey);
         if (!hasKeyGroovy) {
