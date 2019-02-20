@@ -141,7 +141,8 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function adds system groovy script to the XML data.
+     * This function adds a system groovy script to the XML data.
+     * Only one system groovy script may be added to a single jenkins job at the moment.
      *
      * @param script
      * @param sandbox
