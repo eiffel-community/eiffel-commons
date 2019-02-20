@@ -18,6 +18,9 @@ package com.ericsson.eiffelcommons.helpers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,6 +40,15 @@ public class JenkinsXmlData {
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
     private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
     private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
+    private static final String GROOVY_SCRIPT_PLUGIN_VERSION = "2.1";
+    private static final String GROOVY_SCRIPT_SECURITY_PLUGIN_VERSION = "1.51";
+
+    private String hudsonPluginsGroovyGroovyKey = "hudson.plugins.groovy.Groovy plugin='groovy@%s'";
+    private String hudsonPluginGroovySystemGroovyKey = "hudson.plugins.groovy.SystemGroovy plugin='groovy@%s'";
+    private String scriptPluginForScriptSecurityKey = "script plugin='script-security@%s'";
+
+    private String sourceForGroovyKey = "source class='hudson.plugins.groovy.StringSystemScriptSource'";
+    private String scriptSourceforGroovyKey = "scriptSource class='hudson.plugins.groovy.StringScriptSource'";
 
     private JSONObject xmlJsonData;
     private JSONObject builders;
@@ -113,18 +125,49 @@ public class JenkinsXmlData {
      * @return this JenkinsXmlData
      */
     public JenkinsXmlData addGrovyScript(String script) {
-        String hudsonGroovyKey = "hudson.plugins.groovy.Groovy plugin='groovy@2.1'";
-        boolean hasKeyGroovy = builders.has(hudsonGroovyKey);
+        hudsonPluginsGroovyGroovyKey = String.format(hudsonPluginsGroovyGroovyKey, GROOVY_SCRIPT_PLUGIN_VERSION);
 
+        boolean hasKeyGroovy = builders.has(hudsonPluginsGroovyGroovyKey);
         if (!hasKeyGroovy) {
             JSONArray hudsonTasksGroovy = new JSONArray();
-            builders.put(hudsonGroovyKey, hudsonTasksGroovy);
+            builders.put(hudsonPluginsGroovyGroovyKey, hudsonTasksGroovy);
         }
 
         JSONObject newGroovyCommand = BuildGroovyObject(script);
 
-        builders.getJSONArray(hudsonGroovyKey)
+        builders.getJSONArray(hudsonPluginsGroovyGroovyKey)
                 .put(newGroovyCommand);
+        return this;
+    }
+
+    /**
+     * This function adds a system groovy script to the XML data.
+     * Only one system groovy script may be added to a single jenkins job at the moment.
+     *
+     * @param script
+     * @param sandbox
+     * @return this JenkinsXmlData
+     * @throws Exception
+     */
+    public JenkinsXmlData addSystemGrovyScript(String script, boolean sandbox) throws Exception {
+        hudsonPluginGroovySystemGroovyKey = String.format(hudsonPluginGroovySystemGroovyKey,
+                GROOVY_SCRIPT_PLUGIN_VERSION);
+
+        boolean hasKeyGroovy = builders.has(hudsonPluginGroovySystemGroovyKey);
+        if (!hasKeyGroovy) {
+            JSONArray hudsonSystemGroovy = new JSONArray();
+            builders.put(hudsonPluginGroovySystemGroovyKey, hudsonSystemGroovy);
+        } else {
+            throw new Exception("Currently only one system Groovy script supported.");
+        }
+        JSONObject systemGroovyScript = buildSystemGroovyObject(script, sandbox);
+
+        JSONArray systemGroovyContainer = new JSONArray();
+        systemGroovyContainer.put(systemGroovyScript);
+
+        builders.getJSONArray(hudsonPluginGroovySystemGroovyKey)
+                .put(systemGroovyScript);
+
         return this;
     }
 
@@ -210,7 +253,7 @@ public class JenkinsXmlData {
     }
 
     /**
-     * This function creates the croovy script structure needed by jenkins.
+     * This function creates the Groovy script structure needed by jenkins.
      *
      * @param script
      * @return
@@ -218,17 +261,43 @@ public class JenkinsXmlData {
     private JSONObject BuildGroovyObject(String script) {
         JSONObject groovyScriptSource = new JSONObject();
         groovyScriptSource.put("command", script);
-
         JSONObject groovyScript = new JSONObject();
         groovyScript.put("scriptParameters", "");
         groovyScript.put("javaOpts", "");
-        groovyScript.put("scriptSource class='hudson.plugins.groovy.StringScriptSource'", groovyScriptSource);
+        groovyScript.put(scriptSourceforGroovyKey, groovyScriptSource);
         groovyScript.put("classPath", "");
         groovyScript.put("groovyName", "(Default)");
         groovyScript.put("parameters", "");
         groovyScript.put("properties", "");
 
         return groovyScript;
+    }
+
+    /**
+     * This function creates the System Groovy script structure needed by jenkins.
+     *
+     * @param script
+     * @param sandbox
+     * @return
+     */
+    private JSONObject buildSystemGroovyObject(String script, boolean sandbox) {
+        scriptPluginForScriptSecurityKey = String.format(scriptPluginForScriptSecurityKey,
+                GROOVY_SCRIPT_SECURITY_PLUGIN_VERSION);
+
+        JSONObject systemGroovyScriptValues = new JSONObject();
+        systemGroovyScriptValues.put("script", script);
+        systemGroovyScriptValues.put("sandbox", sandbox);
+
+        JSONArray systemGroovyScriptArray = new JSONArray();
+        systemGroovyScriptArray.put(systemGroovyScriptValues);
+
+        JSONObject systemGroovyScriptObject = new JSONObject();
+        systemGroovyScriptObject.put(scriptPluginForScriptSecurityKey, systemGroovyScriptArray);
+
+        JSONObject systemGroovySource = new JSONObject();
+        systemGroovySource.put(sourceForGroovyKey, systemGroovyScriptObject);
+
+        return systemGroovySource;
     }
 
     /**
@@ -239,13 +308,56 @@ public class JenkinsXmlData {
      * @return
      */
     private String removeExtraGroovyParams(String xmlDataString) {
-        xmlDataString = xmlDataString.replaceAll(
-                "\\<\\/hudson\\.plugins\\.groovy\\.Groovy\\ plugin\\=\\'groovy\\@2\\.1\\'",
-                "</hudson.plugins.groovy.Groovy>");
-        xmlDataString = xmlDataString.replaceAll(
-                "\\<\\/scriptSource\\ class\\=\\'hudson\\.plugins\\.groovy\\.StringScriptSource\\'\\>",
-                "</scriptSource>");
+        // Groovy script keys
+        String hudsonPluginsGroovyGroovyKeyEnd = convertToEndNode(hudsonPluginsGroovyGroovyKey);
+        String scriptSourceforGroovyKeyEnd = convertToEndNode(scriptSourceforGroovyKey);
+
+        hudsonPluginsGroovyGroovyKeyEnd = regexify(hudsonPluginsGroovyGroovyKeyEnd);
+        scriptSourceforGroovyKeyEnd = regexify(scriptSourceforGroovyKeyEnd);
+
+        // System groovy script keys
+        String hudsonSystemGroovyKeyEnd = convertToEndNode(hudsonPluginGroovySystemGroovyKey);
+        String systemGroovyScriptKeyEnd = convertToEndNode(scriptPluginForScriptSecurityKey);
+        String sourceForGroovyKeyEnd = convertToEndNode(sourceForGroovyKey);
+
+        hudsonSystemGroovyKeyEnd = regexify(hudsonSystemGroovyKeyEnd);
+        systemGroovyScriptKeyEnd = regexify(systemGroovyScriptKeyEnd);
+        sourceForGroovyKeyEnd = regexify(sourceForGroovyKeyEnd);
+
+        // String replace section
+        xmlDataString = xmlDataString.replaceAll(hudsonPluginsGroovyGroovyKeyEnd, "</hudson.plugins.groovy.Groovy>");
+        xmlDataString = xmlDataString.replaceAll(scriptSourceforGroovyKeyEnd, "</scriptSource>");
+
+        xmlDataString = xmlDataString.replaceAll(hudsonSystemGroovyKeyEnd, "</hudson.plugins.groovy.SystemGroovy>");
+        xmlDataString = xmlDataString.replaceAll(sourceForGroovyKeyEnd, "</source>");
+        xmlDataString = xmlDataString.replaceAll(systemGroovyScriptKeyEnd, "</script>");
+
         return xmlDataString;
+    }
+
+    /**
+     * Function that adds </ and > to a string
+     *
+     * @param string
+     * @return
+     */
+    private String convertToEndNode(String string) {
+        return "</" + string + ">";
+    }
+
+    /**
+     * Function that makes a string usable as regex.
+     *
+     * @param string
+     * @return
+     */
+    private String regexify(String string) {
+        String backSlash = "\\\\";
+        List<String> charsToRegexify = Arrays.asList("'", "\\.", " ", "=", "/", "<", ">");
+        for (String charcters : charsToRegexify) {
+            string = string.replaceAll(charcters, backSlash + charcters);
+        }
+        return string;
     }
 
 }
