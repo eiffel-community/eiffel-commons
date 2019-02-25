@@ -30,7 +30,7 @@ public final class HttpExecutor {
     private CloseableHttpClient client = HttpClientBuilder.create()
                                                           .build();
 
-    private HttpExecutor() {
+    public HttpExecutor() {
 
     }
 
