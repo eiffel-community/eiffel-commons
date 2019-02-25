@@ -60,7 +60,7 @@ public class HttpRequest {
         this(method, false);
     }
 
-    public HttpRequest(HttpMethod method, boolean peristantClient) {
+    public HttpRequest(HttpMethod method, boolean persistentClient) {
         params = new HashMap<>();
 
         switch (method) {
@@ -78,11 +78,11 @@ public class HttpRequest {
                 break;
         }
 
-        initExecutor(peristantClient);
+        initExecutor(persistentClient);
     }
 
-    private void initExecutor(boolean peristantClient) {
-        if(peristantClient) {
+    private void initExecutor(boolean persistentClient) {
+        if(persistentClient) {
             executor = HttpExecutor.getInstance();
         } else {
             executor = new HttpExecutor();
