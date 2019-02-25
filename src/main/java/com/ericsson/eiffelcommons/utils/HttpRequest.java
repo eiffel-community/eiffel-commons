@@ -41,7 +41,7 @@ import lombok.experimental.Accessors;
 public class HttpRequest {
 
     private HttpRequestBase request;
-    private HttpExecutor executor = HttpExecutor.getInstance();
+    private HttpExecutor executor;
 
     public enum HttpMethod {
         GET, POST, DELETE, PUT
@@ -57,6 +57,10 @@ public class HttpRequest {
     protected Map<String, String> params;
 
     public HttpRequest(HttpMethod method) {
+        this(method, false);
+    }
+
+    public HttpRequest(HttpMethod method, boolean persistentClient) {
         params = new HashMap<>();
 
         switch (method) {
@@ -72,6 +76,16 @@ public class HttpRequest {
             case PUT:
                 request = new HttpPut();
                 break;
+        }
+
+        initExecutor(persistentClient);
+    }
+
+    private void initExecutor(boolean persistentClient) {
+        if(persistentClient) {
+            executor = HttpExecutor.getInstance();
+        } else {
+            executor = new HttpExecutor();
         }
     }
 
