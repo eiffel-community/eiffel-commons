@@ -29,7 +29,7 @@ import lombok.Getter;
 public class ResponseEntity {
 
     private int statusCode;
-    private String body;
+    private String body = "";
     private Header[] headers;
 
     /**
@@ -42,7 +42,9 @@ public class ResponseEntity {
     public ResponseEntity(HttpResponse httpResponse) throws ParseException, IOException {
         this.statusCode = httpResponse.getStatusLine()
                                       .getStatusCode();
-        this.body = EntityUtils.toString(httpResponse.getEntity(), "utf-8");
+        if(httpResponse.getEntity() != null) {
+            this.body = EntityUtils.toString(httpResponse.getEntity(), "utf-8");
+        }
         this.headers = httpResponse.getAllHeaders();
     }
 
