@@ -36,8 +36,7 @@ public class Utils {
      * @throws FileNotFoundException
      */
     public static String getResourceFileAsString(String fileName) throws FileNotFoundException {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        InputStream inputStream = classLoader.getResourceAsStream(fileName);
+        InputStream inputStream = Utils.class.getResourceAsStream(fileName);
         if (inputStream != null) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             return reader.lines()
