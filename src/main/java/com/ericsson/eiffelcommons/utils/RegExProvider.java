@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.json.JSONObject;
 
 public class RegExProvider {
+
     private static final String REGULAR_EXPRESSIONS_PATH = "/regExs.json";
 
     /**
