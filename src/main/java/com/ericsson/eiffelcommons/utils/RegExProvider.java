@@ -1,20 +1,11 @@
 package com.ericsson.eiffelcommons.utils;
 
-import java.io.IOException;
-
-import org.json.JSONObject;
-
 public class RegExProvider {
 
-    private static final String REGULAR_EXPRESSIONS_PATH = "/regExs.json";
+    public static final String SUBSCRIPTION_NAME = "(\\W)";
+    public static final String NOTIFICATION_META = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";;
 
-    /**
-     * This method returns Json Object for regular expressions
-     *
-     * @return JSONObject
-     */
-    public static JSONObject getRegExs() throws IOException {
-
-        return Utils.getResourceFileAsJsonObject(REGULAR_EXPRESSIONS_PATH);
+    private RegExProvider() {
+        throw new AssertionError();
     }
 }
