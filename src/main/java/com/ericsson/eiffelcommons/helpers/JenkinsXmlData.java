@@ -18,7 +18,6 @@ package com.ericsson.eiffelcommons.helpers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +35,7 @@ import com.ericsson.eiffelcommons.utils.Utils;
  */
 public class JenkinsXmlData {
 
-    private static final String JENKINS_TEMPLATE_FILE_NAME = "jenkinsJobTemplate.xml";
+    private static final String JENKINS_TEMPLATE_FILE_NAME = "/jenkinsJobTemplate.xml";
     private static final String XML_VERSION = "<?xml version='1.1' encoding='UTF-8'?>";
     private static final String HUDSON_PARAMETERS_DEFINITION_KEY = "hudson.model.ParametersDefinitionProperty";
     private static final String PARAMETER_DEFINITION_KEY = "parameterDefinitions";
