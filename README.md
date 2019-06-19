@@ -18,7 +18,10 @@
 <img src="./images/logo.png" alt="Eiffel Shared Java" width="350"/>
 
 # Eiffel Commons
-** To be added **
+## Java Library
+* Jenkins Manager
+* RegExProvider
+* Subsceription object
 
 # About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
