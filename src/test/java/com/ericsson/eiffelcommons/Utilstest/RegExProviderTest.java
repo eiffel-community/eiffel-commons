@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ericsson.eiffelcommons.utils.RegExProvider;
+import com.ericsson.eiffelcommons.helpers.RegExProvider;
 
 public class RegExProviderTest {
 
