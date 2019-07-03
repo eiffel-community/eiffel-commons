@@ -20,9 +20,28 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @param username
      * @param password
      */
+    @Deprecated
     public void setBasicAuth(String username, String password) {
         subscriptionJson.put("userName", username);
         subscriptionJson.put("password", password);
         subscriptionJson.put("authenticationType", "BASIC_AUTH");
+    }
+
+    /**
+     * Sets the field authenticationType to given value
+     * @param authenticationType
+     */
+    public void setAuthenticationType(String authenticationType) {
+        subscriptionJson.put("authenticationType", authenticationType);
+    }
+
+    /**
+     * Sets the fields Username and Password in a subscription.
+     * @param username
+     * @param password
+     */
+    public void setUsernameAndPassword(String username, String password) {
+        subscriptionJson.put("userName", username);
+        subscriptionJson.put("password", password);
     }
 }
