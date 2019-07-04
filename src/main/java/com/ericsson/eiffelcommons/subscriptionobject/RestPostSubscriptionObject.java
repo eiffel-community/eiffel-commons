@@ -4,6 +4,15 @@ import java.io.IOException;
 
 public class RestPostSubscriptionObject extends SubscriptionObject {
 
+    private final String NOTIFICATION_TYPE_KEY = "notificationType";
+    private final String NOTIFICATION_TYPE = "REST_POST";
+
+    private final String AUTHENTICATION_TYPE_KEY = "authenticationType";
+    private final String USERNAME_KEY = "userName";
+    private final String PASSWORD_KEY = "password";
+
+    private final String BASIC_AUTH = "BASIC_AUTH";
+
     /**
      * Creates a subscriptionObject with REST/POST capabilities.
      * @param subscriptionName
@@ -12,7 +21,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
         super(subscriptionName);
 
-        subscriptionJson.put("notificationType", "REST_POST");
+        subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE);
     }
 
     /**
@@ -20,9 +29,40 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @param username
      * @param password
      */
+    @Deprecated
     public void setBasicAuth(String username, String password) {
-        subscriptionJson.put("userName", username);
-        subscriptionJson.put("password", password);
-        subscriptionJson.put("authenticationType", "BASIC_AUTH");
+        setAuthenticationType(BASIC_AUTH);
+        setUsername(username);
+        setPassword(password);
+    }
+
+    /**
+     * Sets the field authenticationType to given value
+     * @param authenticationType
+     * @return RestPostSubscriptionObject
+     */
+    public RestPostSubscriptionObject setAuthenticationType(String authenticationType) {
+        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, authenticationType);
+        return this;
+    }
+
+    /**
+     * Sets the field username in a subscription.
+     * @param username
+     * @return RestPostSubscriptionObject
+     */
+    public RestPostSubscriptionObject setUsername(String username) {
+        subscriptionJson.put(USERNAME_KEY, username);
+        return this;
+    }
+
+    /**
+     * Sets the field password in a subscription.
+     * @param password
+     * @return RestPostSubscriptionObject
+     */
+    public RestPostSubscriptionObject setPassword(String password) {
+        subscriptionJson.put(PASSWORD_KEY, password);
+        return this;
     }
 }
