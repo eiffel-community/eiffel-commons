@@ -11,14 +11,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
     private final String USERNAME_KEY = "userName";
     private final String PASSWORD_KEY = "password";
 
-    /**
-     * This sets up an enum for AuthenticationTypes
-     *
-     */
-    public enum AuthenticationType {
-        NO_AUTH, BASIC_AUTH, BASIC_AUTH_JENKINS_CSRF;
-    }
-
+    private final String BASIC_AUTH = "BASIC_AUTH";
 
     /**
      * Creates a subscriptionObject with REST/POST capabilities.
@@ -38,7 +31,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      */
     @Deprecated
     public void setBasicAuth(String username, String password) {
-        setAuthenticationType(AuthenticationType.BASIC_AUTH);
+        setAuthenticationType(BASIC_AUTH);
         setUsername(username);
         setPassword(password);
     }
@@ -48,8 +41,8 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @param basicAuth
      * @return RestPostSubscriptionObject
      */
-    public RestPostSubscriptionObject setAuthenticationType(AuthenticationType basicAuth) {
-        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, basicAuth.name());
+    public RestPostSubscriptionObject setAuthenticationType(String basicAuth) {
+        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, basicAuth);
         return this;
     }
 
