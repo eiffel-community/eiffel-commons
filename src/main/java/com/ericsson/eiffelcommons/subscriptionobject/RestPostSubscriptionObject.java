@@ -38,18 +38,17 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
 
     /**
      * Sets the field authenticationType to given value
-     * @param basicAuth
+     * @param authenticationType
      * @return RestPostSubscriptionObject
      */
-    public RestPostSubscriptionObject setAuthenticationType(String basicAuth) {
-        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, basicAuth);
+    public RestPostSubscriptionObject setAuthenticationType(String authenticationType) {
+        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, authenticationType);
         return this;
     }
 
     /**
      * Sets the field username in a subscription.
      * @param username
-     * @param password
      * @return RestPostSubscriptionObject
      */
     public RestPostSubscriptionObject setUsername(String username) {
@@ -59,7 +58,6 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
 
     /**
      * Sets the field password in a subscription.
-     * @param username
      * @param password
      * @return RestPostSubscriptionObject
      */
