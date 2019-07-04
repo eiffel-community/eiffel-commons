@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-commons-java</artifactId>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
 
     <name>eiffel commons java</name>
     <description>A shared library for eiffel components</description>
