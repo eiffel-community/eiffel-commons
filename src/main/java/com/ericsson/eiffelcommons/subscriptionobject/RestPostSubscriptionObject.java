@@ -4,6 +4,20 @@ import java.io.IOException;
 
 public class RestPostSubscriptionObject extends SubscriptionObject {
 
+    private final String NOTIFICATION_TYPE_KEY = "REST_POST";
+    private final String AUTHENTICATION_TYPE_KEY = "notificationType";
+    private final String USERNAME_KEY = "username";
+    private final String PASSWORD_KEY = "password";
+
+    /**
+     * This sets up an enum for AuthenticationTypes
+     *
+     */
+    public enum AuthenticationType {
+        NO_AUTH, BASIC_AUTH, BASIC_AUTH_JENKINS_CSRF;
+    }
+
+
     /**
      * Creates a subscriptionObject with REST/POST capabilities.
      * @param subscriptionName
@@ -12,7 +26,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
         super(subscriptionName);
 
-        subscriptionJson.put("notificationType", "REST_POST");
+        subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE_KEY);
     }
 
     /**
@@ -22,18 +36,18 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      */
     @Deprecated
     public void setBasicAuth(String username, String password) {
-        setAuthenticationType("BASIC_AUTH");
+        setAuthenticationType(AuthenticationType.BASIC_AUTH);
         setUsername(username);
         setPassword(password);
     }
 
     /**
      * Sets the field authenticationType to given value
-     * @param authenticationType
+     * @param basicAuth
      * @return RestPostSubscriptionObject
      */
-    public RestPostSubscriptionObject setAuthenticationType(String authenticationType) {
-        subscriptionJson.put("authenticationType", authenticationType);
+    public RestPostSubscriptionObject setAuthenticationType(AuthenticationType basicAuth) {
+        subscriptionJson.put(AUTHENTICATION_TYPE_KEY, basicAuth.name());
         return this;
     }
 
@@ -44,7 +58,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @return RestPostSubscriptionObject
      */
     public RestPostSubscriptionObject setUsername(String username) {
-        subscriptionJson.put("userName", username);
+        subscriptionJson.put(USERNAME_KEY, username);
         return this;
     }
 
@@ -55,7 +69,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @return RestPostSubscriptionObject
      */
     public RestPostSubscriptionObject setPassword(String password) {
-        subscriptionJson.put("password", password);
+        subscriptionJson.put(PASSWORD_KEY, password);
         return this;
     }
 }
