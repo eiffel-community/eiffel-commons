@@ -32,7 +32,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @param password
      */
     public void setAuthenticationTypeUsernameAndPassword(String authenticationType, String username, String password) {
-        setAuthenticationType("BASIC_AUTH");
+        setAuthenticationType(authenticationType);
         setUsernameAndPassword(username, password);
     }
 
