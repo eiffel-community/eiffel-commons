@@ -4,9 +4,11 @@ import java.io.IOException;
 
 public class RestPostSubscriptionObject extends SubscriptionObject {
 
-    private final String NOTIFICATION_TYPE_KEY = "REST_POST";
-    private final String AUTHENTICATION_TYPE_KEY = "notificationType";
-    private final String USERNAME_KEY = "username";
+    private final String NOTIFICATION_TYPE_KEY = "notificationType";
+    private final String NOTIFICATION_TYPE = "REST_POST";
+
+    private final String AUTHENTICATION_TYPE_KEY = "authenticationType";
+    private final String USERNAME_KEY = "userName";
     private final String PASSWORD_KEY = "password";
 
     /**
@@ -26,7 +28,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
         super(subscriptionName);
 
-        subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE_KEY);
+        subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE);
     }
 
     /**
