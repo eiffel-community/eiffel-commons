@@ -9,24 +9,30 @@ import com.ericsson.eiffelcommons.utils.Utils;
 
 import lombok.Getter;
 
-public abstract class SubscriptionObject {
+public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
     private static final String SUBSCRIPTION_TEMPLATE_PATH = "subscriptionsTemplate.json";
+
+    // reference to self as the subclass type
+    protected final T self;
 
     @Getter
     protected JSONObject subscriptionJson;
 
     /**
      * Creates a subscription with a specific name.
+     *
      * @param subscriptionName
      * @throws IOException
      */
-    public SubscriptionObject(String subscriptionName) throws IOException {
+    public SubscriptionObject(final Class<T> selfClass, String subscriptionName) throws IOException {
         subscriptionJson = Utils.getResourceFileAsJsonObject(SUBSCRIPTION_TEMPLATE_PATH);
         subscriptionJson.put("subscriptionName", subscriptionName);
+        this.self = selfClass.cast(this);
     }
 
     /**
      * Adds a notification message to the subscriptionObject as key value.
+     *
      * @param notificationKey
      * @param notificationValue
      */
@@ -35,17 +41,20 @@ public abstract class SubscriptionObject {
         keyValue.put("formkey", notificationKey);
         keyValue.put("formvalue", notificationValue);
 
-        JSONArray notificationMessageKeyValue = subscriptionJson.getJSONArray("notificationMessageKeyValues");
+        JSONArray notificationMessageKeyValue = subscriptionJson.getJSONArray(
+                "notificationMessageKeyValues");
         notificationMessageKeyValue.put(keyValue);
     }
 
     /**
-     * Adds a condition to a requirement, the condition is objectNode containing key value for the jmesPath expression
+     * Adds a condition to a requirement, the condition is objectNode containing key value for the
+     * jmesPath expression
+     *
      * @param requirementIndex
      * @param condition
      */
     public void addConditionToRequirement(int requirementIndex, JSONObject condition) {
-        JSONArray requirements =  subscriptionJson.getJSONArray("requirements");
+        JSONArray requirements = subscriptionJson.getJSONArray("requirements");
         JSONObject requirement = requirements.getJSONObject(requirementIndex);
         JSONArray conditions = requirement.getJSONArray("conditions");
         conditions.put(condition);
@@ -53,6 +62,7 @@ public abstract class SubscriptionObject {
 
     /**
      * Sets the field notificationMeta to the wanted value
+     *
      * @param notificationMeta
      */
     public void setNotificationMeta(String notificationMeta) {
@@ -60,7 +70,9 @@ public abstract class SubscriptionObject {
     }
 
     /**
-     * Set the restPostBodyMediaType field in the subscriptions to wanted value for example "application/x-www-form-urlencoded"
+     * Set the restPostBodyMediaType field in the subscriptions to wanted value for example
+     * "application/x-www-form-urlencoded"
+     *
      * @param value
      */
     public void setRestPostBodyMediaType(String restPostBodyMediaType) {
@@ -68,7 +80,9 @@ public abstract class SubscriptionObject {
     }
 
     /**
-     * Returns the subscription as an array with the subscription. (This is the way Eiffel-intelligence stores it.)
+     * Returns the subscription as an array with the subscription. (This is the way
+     * Eiffel-intelligence stores it.)
+     *
      * @return ArrayNode
      */
     public JSONArray getAsSubscriptions() {

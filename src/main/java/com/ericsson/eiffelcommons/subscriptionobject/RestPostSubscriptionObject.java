@@ -19,7 +19,7 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      * @throws IOException
      */
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
-        super(subscriptionName);
+        super(RestPostSubscriptionObject.class, subscriptionName);
 
         subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE);
     }
