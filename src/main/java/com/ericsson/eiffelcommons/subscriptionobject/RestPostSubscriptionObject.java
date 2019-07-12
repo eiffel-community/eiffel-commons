@@ -2,7 +2,7 @@ package com.ericsson.eiffelcommons.subscriptionobject;
 
 import java.io.IOException;
 
-public class RestPostSubscriptionObject extends SubscriptionObject {
+public class RestPostSubscriptionObject extends SubscriptionObject<RestPostSubscriptionObject> {
 
     private final String NOTIFICATION_TYPE_KEY = "notificationType";
     private final String NOTIFICATION_TYPE = "REST_POST";
@@ -20,7 +20,6 @@ public class RestPostSubscriptionObject extends SubscriptionObject {
      */
     public RestPostSubscriptionObject(String subscriptionName) throws IOException {
         super(RestPostSubscriptionObject.class, subscriptionName);
-
         subscriptionJson.put(NOTIFICATION_TYPE_KEY, NOTIFICATION_TYPE);
     }
 

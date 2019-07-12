@@ -35,8 +35,9 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      *
      * @param notificationKey
      * @param notificationValue
+     * @return
      */
-    public void addNotificationMessageKeyValue(String notificationKey, String notificationValue) {
+    public T addNotificationMessageKeyValue(String notificationKey, String notificationValue) {
         JSONObject keyValue = new JSONObject();
         keyValue.put("formkey", notificationKey);
         keyValue.put("formvalue", notificationValue);
@@ -44,6 +45,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
         JSONArray notificationMessageKeyValue = subscriptionJson.getJSONArray(
                 "notificationMessageKeyValues");
         notificationMessageKeyValue.put(keyValue);
+        return this.self;
     }
 
     /**
@@ -52,21 +54,25 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      *
      * @param requirementIndex
      * @param condition
+     * @return
      */
-    public void addConditionToRequirement(int requirementIndex, JSONObject condition) {
+    public T addConditionToRequirement(int requirementIndex, JSONObject condition) {
         JSONArray requirements = subscriptionJson.getJSONArray("requirements");
         JSONObject requirement = requirements.getJSONObject(requirementIndex);
         JSONArray conditions = requirement.getJSONArray("conditions");
         conditions.put(condition);
+        return this.self;
     }
 
     /**
      * Sets the field notificationMeta to the wanted value
      *
      * @param notificationMeta
+     * @return
      */
-    public void setNotificationMeta(String notificationMeta) {
+    public T setNotificationMeta(String notificationMeta) {
         subscriptionJson.put("notificationMeta", notificationMeta);
+        return this.self;
     }
 
     /**
@@ -74,9 +80,11 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * "application/x-www-form-urlencoded"
      *
      * @param value
+     * @return
      */
-    public void setRestPostBodyMediaType(String restPostBodyMediaType) {
+    public T setRestPostBodyMediaType(String restPostBodyMediaType) {
         subscriptionJson.put("restPostBodyMediaType", restPostBodyMediaType);
+        return this.self;
     }
 
     /**

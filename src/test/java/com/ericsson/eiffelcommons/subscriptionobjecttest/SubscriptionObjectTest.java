@@ -28,7 +28,7 @@ public class SubscriptionObjectTest {
         restPostSubscription.addConditionToRequirement(0, condition);
 
         JSONArray actualRequirement = restPostSubscription.getSubscriptionJson()
-                .getJSONArray("requirements");
+                                                          .getJSONArray("requirements");
         JSONObject actualCondition = actualRequirement.getJSONObject(0);
 
         assertEquals("{\"conditions\":[{\"test\":\"'test'\"}]}", actualCondition.toString());
@@ -39,8 +39,10 @@ public class SubscriptionObjectTest {
         restPostSubscription.addNotificationMessageKeyValue("jmespath", "'test'");
 
         JSONArray actualNotificationMessageKeyValue = restPostSubscription.getSubscriptionJson()
-                .getJSONArray("notificationMessageKeyValues");
-        assertEquals("[{\"formkey\":\"jmespath\",\"formvalue\":\"'test'\"}]", actualNotificationMessageKeyValue.toString());
+                                                                          .getJSONArray(
+                                                                                  "notificationMessageKeyValues");
+        assertEquals("[{\"formkey\":\"jmespath\",\"formvalue\":\"'test'\"}]",
+                actualNotificationMessageKeyValue.toString());
     }
 
     @Test
@@ -48,8 +50,8 @@ public class SubscriptionObjectTest {
         restPostSubscription.setNotificationMeta("http://localhost:8080");
 
         String actualNotificationMeta = restPostSubscription.getSubscriptionJson()
-                .get("notificationMeta")
-                .toString();
+                                                            .get("notificationMeta")
+                                                            .toString();
         assertEquals("http://localhost:8080", actualNotificationMeta);
     }
 
@@ -58,14 +60,14 @@ public class SubscriptionObjectTest {
         restPostSubscription.setBasicAuth("admin", "admin");
 
         String actualUsername = restPostSubscription.getSubscriptionJson()
-                .get("userName")
-                .toString();
+                                                    .get("userName")
+                                                    .toString();
         String actualPassword = restPostSubscription.getSubscriptionJson()
-                .get("password")
-                .toString();
+                                                    .get("password")
+                                                    .toString();
         String actualAuthenticationType = restPostSubscription.getSubscriptionJson()
-                .get("authenticationType")
-                .toString();
+                                                              .get("authenticationType")
+                                                              .toString();
 
         assertEquals("admin", actualUsername);
         assertEquals("admin", actualPassword);
@@ -77,8 +79,21 @@ public class SubscriptionObjectTest {
         restPostSubscription.setRestPostBodyMediaType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String actualRestPostBodyMediaType = restPostSubscription.getSubscriptionJson()
-                .get("restPostBodyMediaType")
-                .toString();
+                                                                 .get("restPostBodyMediaType")
+                                                                 .toString();
         assertEquals("application/x-www-form-urlencoded", actualRestPostBodyMediaType);
+    }
+
+    @Test
+    public void testChaining() {
+        restPostSubscription.addNotificationMessageKeyValue("Key", "value")
+                            .setAuthenticationType("test_type")
+                            .setPassword("my_password")
+                            .setUsername("username")
+                            .addNotificationMessageKeyValue("key2", "value2")
+                            .setNotificationMeta("SomeURL");
+        JSONObject subscription = restPostSubscription.getSubscriptionJson();
+
+        assertEquals("my_password", subscription.getString("password"));
     }
 }
