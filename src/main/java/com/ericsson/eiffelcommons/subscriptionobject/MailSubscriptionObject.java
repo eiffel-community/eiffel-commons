@@ -2,7 +2,7 @@ package com.ericsson.eiffelcommons.subscriptionobject;
 
 import java.io.IOException;
 
-public class MailSubscriptionObject extends SubscriptionObject {
+public class MailSubscriptionObject extends SubscriptionObject<MailSubscriptionObject> {
 
     /**
      * Creates a subscriptionObject with MAIL capabilities.
@@ -10,7 +10,7 @@ public class MailSubscriptionObject extends SubscriptionObject {
      * @throws IOException
      */
     public MailSubscriptionObject(String subscriptionName) throws IOException {
-        super(subscriptionName);
+        super(MailSubscriptionObject.class, subscriptionName);
 
         subscriptionJson.put("notificationType", "MAIL");
     }
