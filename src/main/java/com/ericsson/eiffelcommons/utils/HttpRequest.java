@@ -102,6 +102,7 @@ public class HttpRequest {
      * @param baseUrl
      */
     public HttpRequest setBaseUrl(String baseUrl) {
+        baseUrl = trimBaseUrl(baseUrl);
         this.baseUrl = baseUrl;
         return this;
     }
@@ -212,14 +213,54 @@ public class HttpRequest {
      * @throws ClientProtocolException
      */
     public ResponseEntity performRequest() throws URISyntaxException, ClientProtocolException, IOException {
-        URIBuilder builder = new URIBuilder(baseUrl + endpoint);
+        URIBuilder builder = createURIBuilder();
+        builder = addParametersToURIBuilder(builder);
 
+        request.setURI(builder.build());
+        return executor.executeRequest(request);
+    }
+
+    /**
+     * Function that adds parameters to the URIBuilder
+     *
+     * @param URIBuilder
+     * @return URIBuilder
+     */
+    private URIBuilder addParametersToURIBuilder(URIBuilder builder) {
         if (!params.isEmpty()) {
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 builder.addParameter(entry.getKey(), entry.getValue());
             }
         }
-        request.setURI(builder.build());
-        return executor.executeRequest(request);
+
+        return builder;
+    }
+
+    /**
+     * Function that creates the URI from the baseUrl and endpoint
+     *
+     * @param
+     * @return URIBuilder
+     * @throws URISyntaxException
+     */
+    private URIBuilder createURIBuilder() throws URISyntaxException {
+        if(endpoint.startsWith("/")) {
+            return new URIBuilder(baseUrl + endpoint);
+        } else {
+            return new URIBuilder(baseUrl + "/" + endpoint);
+        }
+    }
+
+    /**
+     * Function that trims the base url for trailing slashes
+     *
+     * @return HttpRequest
+     */
+    private String trimBaseUrl(String baseUrl) {
+        if(baseUrl.endsWith("/")) {
+            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+        }
+
+        return baseUrl;
     }
 }
