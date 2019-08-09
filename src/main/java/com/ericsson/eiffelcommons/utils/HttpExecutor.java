@@ -24,7 +24,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-public final class HttpExecutor {
+public class HttpExecutor {
 
     private static HttpExecutor instance;
     private CloseableHttpClient client = HttpClientBuilder.create()
@@ -32,6 +32,10 @@ public final class HttpExecutor {
 
     public HttpExecutor() {
 
+    }
+
+    public HttpExecutor(CloseableHttpClient client) {
+        this.client = client;
     }
 
     public static HttpExecutor getInstance() {
