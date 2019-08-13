@@ -13,16 +13,18 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 package com.ericsson.eiffelcommons.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.Header;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -31,7 +33,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -56,28 +60,23 @@ public class HttpRequest {
     @Getter
     protected Map<String, String> params;
 
+    public HttpRequest() {
+        params = new HashMap<>();
+        initExecutor(false);
+    }
+
     public HttpRequest(HttpMethod method) {
         this(method, false);
     }
 
+    public HttpRequest(HttpMethod method, HttpExecutor executor) {
+        this(method, false);
+        this.executor = executor;
+    }
+
     public HttpRequest(HttpMethod method, boolean persistentClient) {
         params = new HashMap<>();
-
-        switch (method) {
-            case POST:
-                request = new HttpPost();
-                break;
-            case GET:
-                request = new HttpGet();
-                break;
-            case DELETE:
-                request = new HttpDelete();
-                break;
-            case PUT:
-                request = new HttpPut();
-                break;
-        }
-
+        setHttpMethod(method);
         initExecutor(persistentClient);
     }
 
@@ -87,6 +86,29 @@ public class HttpRequest {
         } else {
             executor = new HttpExecutor();
         }
+    }
+
+    /**
+     * Sets the http method for this request object
+     * @param method
+     */
+    public HttpRequest setHttpMethod(HttpMethod method) {
+        switch (method) {
+        case POST:
+            request = new HttpPost();
+            break;
+        case GET:
+            request = new HttpGet();
+            break;
+        case DELETE:
+            request = new HttpDelete();
+            break;
+        case PUT:
+            request = new HttpPut();
+            break;
+        }
+
+        return this;
     }
 
     /**
@@ -129,10 +151,22 @@ public class HttpRequest {
      *            :: the key of the header
      * @param value
      *            :: the value of the header
-     * @return
+     * @return HttpRequest
      */
     public HttpRequest addHeader(String key, String value) {
         request.addHeader(key, value);
+        return this;
+    }
+    /**
+     * Function that overwrites the first header with the same name. The new header will be appended to the end of the list, if no header with the given name can be found.
+     *
+     * @param key
+     * @param value
+     * @return HttpRequest
+     */
+    public HttpRequest setHeader(String key, String value) {
+        Header header = new BasicHeader(key, value);
+        request.setHeader(header);
         return this;
     }
 
@@ -165,7 +199,7 @@ public class HttpRequest {
      *            :: the key of the parameter
      * @param value
      *            :: the value of the parameter
-     * @return
+     * @return HttpRequest
      */
     public HttpRequest addParam(String key, String value) {
         params.put(key, value);
@@ -173,19 +207,31 @@ public class HttpRequest {
     }
 
     /**
-     * Function that sets the body of the http request.
+     * Function that sets the body of the http request with a chosen content type.
+     *
+     * @param body
+     *            :: String input
+     * @return HTTPRequest
+     */
+    public HttpRequest setBody(String body, ContentType contentType) {
+        ((HttpEntityEnclosingRequestBase) request).setEntity(new StringEntity(body, contentType));
+        return this;
+    }
+
+    /**
+     * Function that sets the body of the http request with default content type(text/plain).
      *
      * @param body
      *            :: String input
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body) {
-        ((HttpEntityEnclosingRequestBase) request).setEntity(new StringEntity(body, "UTF-8"));
+        setBody(body, ContentType.TEXT_PLAIN);
         return this;
     }
 
     /**
-     * Function that sets the body of the http request.
+     * Function that sets the body of the http request with default value of content type (text/plain).
      *
      * @param file
      *            :: File input
@@ -193,6 +239,20 @@ public class HttpRequest {
      * @throws IOException
      */
     public HttpRequest setBody(File file) throws IOException {
+        setBody(file, ContentType.TEXT_PLAIN);
+        return this;
+    }
+
+    /**
+     * Function that sets the body of the http request with a chosen content type.
+     *
+     * @param file
+     *            :: File input
+     * @param type
+     * @return HTTPRequest
+     * @throws IOException
+     */
+    public HttpRequest setBody(File file, ContentType contentType) throws IOException {
         String fileContent = "";
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
@@ -201,7 +261,7 @@ public class HttpRequest {
                     + e.getMessage();
             throw new IOException(message);
         }
-        return setBody(fileContent);
+        return setBody(fileContent, contentType);
     }
 
     /**
@@ -215,9 +275,19 @@ public class HttpRequest {
     public ResponseEntity performRequest() throws URISyntaxException, ClientProtocolException, IOException {
         URIBuilder builder = createURIBuilder();
         builder = addParametersToURIBuilder(builder);
-
         request.setURI(builder.build());
         return executor.executeRequest(request);
+    }
+
+    /**
+     * Function that returns the URI of the request.
+     *
+     * @return URI
+     * @throws URISyntaxException
+     */
+    public URI getURI() throws URISyntaxException {
+        URIBuilder builder = createURIBuilder();
+        return builder.build();
     }
 
     /**
