@@ -31,6 +31,16 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
     }
 
     /**
+     * Adds a notification body to the subscriptionObject.
+     *
+     * @param notificationBody
+     * @return
+     */
+    public T addNotificationBody(String notificationBody) {
+        return addNotificationMessageKeyValue("", notificationBody);
+    }
+
+    /**
      * Adds a notification message to the subscriptionObject as key value.
      *
      * @param notificationKey
