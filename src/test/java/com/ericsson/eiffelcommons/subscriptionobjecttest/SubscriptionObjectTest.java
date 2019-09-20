@@ -10,15 +10,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.ericsson.eiffelcommons.helpers.MediaType;
+import com.ericsson.eiffelcommons.subscriptionobject.MailSubscriptionObject;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
 
 public class SubscriptionObjectTest {
 
     RestPostSubscriptionObject restPostSubscription;
+    MailSubscriptionObject mailSubscription;
 
     @Before
     public void setup() throws IOException {
         restPostSubscription = new RestPostSubscriptionObject("mySubscription");
+        mailSubscription = new MailSubscriptionObject("myMailSubscription");
     }
 
     @Test
@@ -50,8 +53,7 @@ public class SubscriptionObjectTest {
         restPostSubscription.setNotificationMeta("http://localhost:8080");
 
         String actualNotificationMeta = restPostSubscription.getSubscriptionJson()
-                                                            .get("notificationMeta")
-                                                            .toString();
+                                                            .getString("notificationMeta");
         assertEquals("http://localhost:8080", actualNotificationMeta);
     }
 
@@ -60,14 +62,11 @@ public class SubscriptionObjectTest {
         restPostSubscription.setBasicAuth("admin", "admin");
 
         String actualUsername = restPostSubscription.getSubscriptionJson()
-                                                    .get("userName")
-                                                    .toString();
+                                                    .getString("userName");
         String actualPassword = restPostSubscription.getSubscriptionJson()
-                                                    .get("password")
-                                                    .toString();
+                                                    .getString("password");
         String actualAuthenticationType = restPostSubscription.getSubscriptionJson()
-                                                              .get("authenticationType")
-                                                              .toString();
+                                                              .getString("authenticationType");
 
         assertEquals("admin", actualUsername);
         assertEquals("admin", actualPassword);
@@ -79,9 +78,29 @@ public class SubscriptionObjectTest {
         restPostSubscription.setRestPostBodyMediaType(MediaType.APPLICATION_FORM_URLENCODED);
 
         String actualRestPostBodyMediaType = restPostSubscription.getSubscriptionJson()
-                                                                 .get("restPostBodyMediaType")
-                                                                 .toString();
+                                                                 .getString("restPostBodyMediaType");
         assertEquals("application/x-www-form-urlencoded", actualRestPostBodyMediaType);
+    }
+
+    @Test
+    public void testSetNotificationBody() {
+        String body = "Body";
+        mailSubscription.addNotificationBody(body);
+
+        String actualNotificationBody = mailSubscription.getSubscriptionJson()
+                                                        .get("notificationMessageKeyValues")
+                                                        .toString();
+        assertEquals(true, actualNotificationBody.contains(body));
+    }
+
+    @Test
+    public void testSetEmailSubject() {
+        String subject = "MySubject";
+        mailSubscription.setEmailSubject(subject);
+
+        String actualEmailSubject = mailSubscription.getSubscriptionJson()
+                                                    .getString("emailSubject");
+        assertEquals(subject, actualEmailSubject);
     }
 
     @Test

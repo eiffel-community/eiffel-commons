@@ -22,8 +22,8 @@ public class MailSubscriptionObject extends SubscriptionObject<MailSubscriptionO
      * @param emailSubject
      * @return MailSubscriptionObject
      */
-    public MailSubscriptionObject setSubject(String subject) {
-        subscriptionJson.put(EMAIL_SUBJECT, subject);
+    public MailSubscriptionObject setEmailSubject(final String emailSubject) {
+        subscriptionJson.put(EMAIL_SUBJECT, emailSubject);
         return this;
     }
 }

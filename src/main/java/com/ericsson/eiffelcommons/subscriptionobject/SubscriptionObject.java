@@ -34,9 +34,9 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * Adds a notification body to the subscriptionObject.
      *
      * @param notificationBody
-     * @return
+     * @return SubscriptionObject<T>
      */
-    public T addNotificationBody(String notificationBody) {
+    public T addNotificationBody(final String notificationBody) {
         return addNotificationMessageKeyValue("", notificationBody);
     }
 
@@ -45,7 +45,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      *
      * @param notificationKey
      * @param notificationValue
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T addNotificationMessageKeyValue(String notificationKey, String notificationValue) {
         JSONObject keyValue = new JSONObject();
@@ -64,7 +64,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      *
      * @param requirementIndex
      * @param condition
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T addConditionToRequirement(int requirementIndex, JSONObject condition) {
         JSONArray requirements = subscriptionJson.getJSONArray("requirements");
@@ -78,7 +78,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * Sets the field notificationMeta to the wanted value
      *
      * @param notificationMeta
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T setNotificationMeta(String notificationMeta) {
         subscriptionJson.put("notificationMeta", notificationMeta);
@@ -90,7 +90,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * "application/x-www-form-urlencoded"
      *
      * @param value
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T setRestPostBodyMediaType(String restPostBodyMediaType) {
         subscriptionJson.put("restPostBodyMediaType", restPostBodyMediaType);
