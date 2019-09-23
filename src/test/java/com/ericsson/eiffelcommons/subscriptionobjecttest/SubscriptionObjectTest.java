@@ -1,6 +1,7 @@
 package com.ericsson.eiffelcommons.subscriptionobjecttest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -90,7 +91,7 @@ public class SubscriptionObjectTest {
         String actualNotificationBody = mailSubscription.getSubscriptionJson()
                                                         .get("notificationMessageKeyValues")
                                                         .toString();
-        assertEquals(true, actualNotificationBody.contains(body));
+        assertTrue(actualNotificationBody.contains(body));
     }
 
     @Test
