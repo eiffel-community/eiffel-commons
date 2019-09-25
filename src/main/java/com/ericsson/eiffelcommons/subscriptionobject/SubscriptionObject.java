@@ -89,7 +89,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * Set the restPostBodyMediaType field in the subscriptions to wanted value for example
      * "application/x-www-form-urlencoded"
      *
-     * @param value
+     * @param restPostBodyMediaType
      * @return SubscriptionObject<T>
      */
     public T setRestPostBodyMediaType(String restPostBodyMediaType) {
