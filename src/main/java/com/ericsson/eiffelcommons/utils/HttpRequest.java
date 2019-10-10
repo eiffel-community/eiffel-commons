@@ -18,13 +18,16 @@ package com.ericsson.eiffelcommons.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -81,7 +84,7 @@ public class HttpRequest {
     }
 
     private void initExecutor(boolean persistentClient) {
-        if(persistentClient) {
+        if (persistentClient) {
             executor = HttpExecutor.getInstance();
         } else {
             executor = new HttpExecutor();
@@ -90,6 +93,7 @@ public class HttpRequest {
 
     /**
      * Sets the http method for this request object
+     *
      * @param method
      */
     public HttpRequest setHttpMethod(HttpMethod method) {
@@ -113,6 +117,7 @@ public class HttpRequest {
 
     /**
      * Gets the base url(not including endpoint) for example: http://localhost:8080
+     *
      * @return String
      */
     public String getBaseUrl() {
@@ -121,6 +126,7 @@ public class HttpRequest {
 
     /**
      * Sets the base url(not including endpoint) for example: http://localhost:8080
+     *
      * @param baseUrl
      */
     public HttpRequest setBaseUrl(String baseUrl) {
@@ -147,18 +153,18 @@ public class HttpRequest {
     /**
      * Function the adds a header to the http request.
      *
-     * @param key
-     *            :: the key of the header
-     * @param value
-     *            :: the value of the header
+     * @param key   :: the key of the header
+     * @param value :: the value of the header
      * @return HttpRequest
      */
     public HttpRequest addHeader(String key, String value) {
         request.addHeader(key, value);
         return this;
     }
+
     /**
-     * Function that overwrites the first header with the same name. The new header will be appended to the end of the list, if no header with the given name can be found.
+     * Function that overwrites the first header with the same name. The new header will be appended
+     * to the end of the list, if no header with the given name can be found.
      *
      * @param key
      * @param value
@@ -173,8 +179,7 @@ public class HttpRequest {
     /**
      * Takes a header key as input and removes that key and value from the list of headers.
      *
-     * @param headerKey
-     *            :: the header to remove
+     * @param headerKey :: the header to remove
      */
     public void removeHeader(String headerKey) {
         request.removeHeaders(headerKey);
@@ -183,25 +188,22 @@ public class HttpRequest {
     /**
      * Function that adds multiple parameters to the http request.
      *
-     * @param parameters
-     *            :: List<NameValuePair>
+     * @param parameters :: List<NameValuePair>
      */
     public void addParameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            addParam(entry.getKey(), entry.getValue());
+            addParameter(entry.getKey(), entry.getValue());
         }
     }
 
     /**
      * Function that adds a parameter to the http request.
      *
-     * @param key
-     *            :: the key of the parameter
-     * @param value
-     *            :: the value of the parameter
+     * @param key   :: the key of the parameter
+     * @param value :: the value of the parameter
      * @return HttpRequest
      */
-    public HttpRequest addParam(String key, String value) {
+    public HttpRequest addParameter(String key, String value) {
         params.put(key, value);
         return this;
     }
@@ -209,8 +211,7 @@ public class HttpRequest {
     /**
      * Function that sets the body of the http request with a chosen content type.
      *
-     * @param body
-     *            :: String input
+     * @param body :: String input
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body, ContentType contentType) {
@@ -221,8 +222,7 @@ public class HttpRequest {
     /**
      * Function that sets the body of the http request with default content type(text/plain).
      *
-     * @param body
-     *            :: String input
+     * @param body :: String input
      * @return HTTPRequest
      */
     public HttpRequest setBody(String body) {
@@ -231,10 +231,10 @@ public class HttpRequest {
     }
 
     /**
-     * Function that sets the body of the http request with default value of content type (text/plain).
+     * Function that sets the body of the http request with default value of content type
+     * (text/plain).
      *
-     * @param file
-     *            :: File input
+     * @param file :: File input
      * @return HTTPRequest
      * @throws IOException
      */
@@ -246,8 +246,7 @@ public class HttpRequest {
     /**
      * Function that sets the body of the http request with a chosen content type.
      *
-     * @param file
-     *            :: File input
+     * @param file :: File input
      * @param type
      * @return HTTPRequest
      * @throws IOException
@@ -257,11 +256,28 @@ public class HttpRequest {
         try {
             fileContent = FileUtils.readFileToString(file, "UTF-8");
         } catch (IOException e) {
-            final String message = "Failed to read the Request body file:" + file.getPath() + ". Message: "
+            final String message = "Failed to read the Request body file:" + file.getPath()
+                    + ". Message: "
                     + e.getMessage();
             throw new IOException(message);
         }
         return setBody(fileContent, contentType);
+    }
+
+    /**
+     * Function that sets the Authorization header of the http request.
+     *
+     * @param username
+     * @param password
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public HttpRequest setBasicAuth(String username, String password)
+            throws UnsupportedEncodingException {
+        String auth = String.format("%s:%s", username, password);
+        String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
+        params.put(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
+        return this;
     }
 
     /**
@@ -272,7 +288,8 @@ public class HttpRequest {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public ResponseEntity performRequest() throws URISyntaxException, ClientProtocolException, IOException {
+    public ResponseEntity performRequest()
+            throws URISyntaxException, ClientProtocolException, IOException {
         URIBuilder builder = createURIBuilder();
         builder = addParametersToURIBuilder(builder);
         request.setURI(builder.build());
@@ -314,7 +331,7 @@ public class HttpRequest {
      * @throws URISyntaxException
      */
     private URIBuilder createURIBuilder() throws URISyntaxException {
-        if(endpoint.startsWith("/")) {
+        if (endpoint.startsWith("/")) {
             return new URIBuilder(baseUrl + endpoint);
         } else {
             return new URIBuilder(baseUrl + "/" + endpoint);
@@ -327,7 +344,7 @@ public class HttpRequest {
      * @return HttpRequest
      */
     private String trimBaseUrl(String baseUrl) {
-        if(baseUrl.endsWith("/")) {
+        if (baseUrl.endsWith("/")) {
             baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
         }
 
