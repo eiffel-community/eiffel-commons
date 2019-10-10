@@ -108,7 +108,7 @@ public class JenkinsManager {
                    .addHeader("Authorization", "Basic " + encoding)
                    .addHeader("Content-type", MediaType.APPLICATION_XML)
                    .addHeader("Jenkins-Crumb", crumb)
-                   .addParam("name", jobName)
+                   .addParameter("name", jobName)
                    .setBody(jobXmlData)
                    .setEndpoint("/createItem");
 
@@ -306,8 +306,8 @@ public class JenkinsManager {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
         httpRequest.setBaseUrl(jenkinsBaseUrl)
                    .addHeader("Authorization", "Basic " + encoding)
-                   .addParam("depth", "1")
-                   .addParam("wrapper", "plugins")
+                   .addParameter("depth", "1")
+                   .addParameter("wrapper", "plugins")
                    .setEndpoint("/pluginManager/api/json");
 
         ResponseEntity response = httpRequest.performRequest();
@@ -438,7 +438,7 @@ public class JenkinsManager {
         httpRequest.setBaseUrl(jenkinsBaseUrl)
                    .addHeader("Authorization", "Basic " + encoding)
                    .addHeader("Content-type", mediatype)
-                   .addParam("token", jobToken)
+                   .addParameter("token", jobToken)
                    .setEndpoint(endpoint);
 
         ResponseEntity response = httpRequest.performRequest();
