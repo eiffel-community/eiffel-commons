@@ -49,7 +49,7 @@ public class HttpRequestTest {
         builder = (URIBuilder) createURIBuilder.invoke(request);
         assertEquals(expectedURI, builder.toString());
 
-        request.setCredentials("username", "password");
+        request.setBasicAuth("username", "password");
         builder = (URIBuilder) createURIBuilder.invoke(request);
         builder = (URIBuilder) addParametersToURIBuilder.invoke(request, builder);
         String actualAuthParam = builder.getQueryParams().get(0).toString();
