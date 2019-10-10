@@ -31,11 +31,21 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
     }
 
     /**
+     * Adds a notification body to the subscriptionObject.
+     *
+     * @param notificationBody
+     * @return SubscriptionObject<T>
+     */
+    public T addNotificationBody(final String notificationBody) {
+        return addNotificationMessageKeyValue("", notificationBody);
+    }
+
+    /**
      * Adds a notification message to the subscriptionObject as key value.
      *
      * @param notificationKey
      * @param notificationValue
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T addNotificationMessageKeyValue(String notificationKey, String notificationValue) {
         JSONObject keyValue = new JSONObject();
@@ -54,7 +64,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      *
      * @param requirementIndex
      * @param condition
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T addConditionToRequirement(int requirementIndex, JSONObject condition) {
         JSONArray requirements = subscriptionJson.getJSONArray("requirements");
@@ -68,7 +78,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * Sets the field notificationMeta to the wanted value
      *
      * @param notificationMeta
-     * @return
+     * @return SubscriptionObject<T>
      */
     public T setNotificationMeta(String notificationMeta) {
         subscriptionJson.put("notificationMeta", notificationMeta);
@@ -79,8 +89,8 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * Set the restPostBodyMediaType field in the subscriptions to wanted value for example
      * "application/x-www-form-urlencoded"
      *
-     * @param value
-     * @return
+     * @param restPostBodyMediaType
+     * @return SubscriptionObject<T>
      */
     public T setRestPostBodyMediaType(String restPostBodyMediaType) {
         subscriptionJson.put("restPostBodyMediaType", restPostBodyMediaType);

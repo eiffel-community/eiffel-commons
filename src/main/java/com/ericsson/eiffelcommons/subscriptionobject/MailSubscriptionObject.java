@@ -4,6 +4,8 @@ import java.io.IOException;
 
 public class MailSubscriptionObject extends SubscriptionObject<MailSubscriptionObject> {
 
+    private final String EMAIL_SUBJECT = "emailSubject";
+
     /**
      * Creates a subscriptionObject with MAIL capabilities.
      * @param subscriptionName
@@ -13,5 +15,15 @@ public class MailSubscriptionObject extends SubscriptionObject<MailSubscriptionO
         super(MailSubscriptionObject.class, subscriptionName);
 
         subscriptionJson.put("notificationType", "MAIL");
+    }
+
+    /**
+     * Sets the field emailSubject to given value
+     * @param emailSubject
+     * @return MailSubscriptionObject
+     */
+    public MailSubscriptionObject setEmailSubject(final String emailSubject) {
+        subscriptionJson.put(EMAIL_SUBJECT, emailSubject);
+        return this;
     }
 }
