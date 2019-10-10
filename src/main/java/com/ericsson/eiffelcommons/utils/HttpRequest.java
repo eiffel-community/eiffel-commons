@@ -18,13 +18,16 @@ package com.ericsson.eiffelcommons.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -262,6 +265,23 @@ public class HttpRequest {
             throw new IOException(message);
         }
         return setBody(fileContent, contentType);
+    }
+
+    /**
+     * Function that sets the Authorization header of the http request.
+     *
+     * @param httpRequest
+     * @param username
+     * @param password
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public HttpRequest setCredentials(HttpRequest httpRequest, String username,
+            String password) throws UnsupportedEncodingException {
+        String auth = username + ":" + password;
+        String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
+        return this;
     }
 
     /**
