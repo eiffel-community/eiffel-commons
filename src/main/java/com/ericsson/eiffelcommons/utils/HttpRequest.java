@@ -267,13 +267,12 @@ public class HttpRequest {
     /**
      * Function that sets the Authorization header of the http request.
      *
-     * @param httpRequest
      * @param username
      * @param password
      * @return
      * @throws UnsupportedEncodingException
      */
-    public HttpRequest setCredentials(String username, String password)
+    public HttpRequest setBasicAuth(String username, String password)
             throws UnsupportedEncodingException {
         String auth = String.format("%s:%s", username, password);
         String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
