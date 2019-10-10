@@ -191,7 +191,7 @@ public class HttpRequest {
      */
     public void addParameters(Map<String, String> parameters) {
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            addParam(entry.getKey(), entry.getValue());
+            addParameter(entry.getKey(), entry.getValue());
         }
     }
 
@@ -204,7 +204,7 @@ public class HttpRequest {
      *            :: the value of the parameter
      * @return HttpRequest
      */
-    public HttpRequest addParam(String key, String value) {
+    public HttpRequest addParameter(String key, String value) {
         params.put(key, value);
         return this;
     }
