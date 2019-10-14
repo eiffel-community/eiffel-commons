@@ -276,7 +276,7 @@ public class HttpRequest {
             throws UnsupportedEncodingException {
         String auth = String.format("%s:%s", username, password);
         String encodedAuth = new String(Base64.encodeBase64(auth.getBytes()), "UTF-8");
-        params.put(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
+        addHeader(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth);
         return this;
     }
 

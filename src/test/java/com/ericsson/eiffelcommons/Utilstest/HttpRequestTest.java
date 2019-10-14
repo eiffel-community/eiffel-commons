@@ -2,57 +2,46 @@ package com.ericsson.eiffelcommons.Utilstest;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.URISyntaxException;
-
-import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
 
 import com.ericsson.eiffelcommons.utils.HttpRequest;
 import com.ericsson.eiffelcommons.utils.HttpRequest.HttpMethod;
 
 public class HttpRequestTest {
+    private static final String EXPECTED_URI = "http://something.com/testing/test/";
+    private static final String EXPECTED_HEADER = "Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=";
+
     @Test
-    public void testBuildingOfURI()
-            throws NoSuchFieldException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException, NoSuchMethodException,
-            URISyntaxException, ClientProtocolException, IOException {
-        String expectedURI = "http://something.com/testing/test/";
-        String expectedAuthParam = "Authorization=Basic dXNlcm5hbWU6cGFzc3dvcmQ=";
+    public void testBuildingOfURI() throws Exception {
+
         HttpRequest request = new HttpRequest(HttpMethod.POST);
-        Method createURIBuilder = HttpRequest.class.getDeclaredMethod("createURIBuilder");
-        Method addParametersToURIBuilder = HttpRequest.class.getDeclaredMethod(
-                "addParametersToURIBuilder", URIBuilder.class);
-        createURIBuilder.setAccessible(true);
-        addParametersToURIBuilder.setAccessible(true);
 
         request.setBaseUrl("http://something.com");
         request.setEndpoint("/testing/test/");
-        URIBuilder builder = (URIBuilder) createURIBuilder.invoke(request);
-        assertEquals(expectedURI, builder.toString());
+        URIBuilder builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
+        assertEquals(EXPECTED_URI, builder.toString());
 
         request.setBaseUrl("http://something.com/");
         request.setEndpoint("/testing/test/");
-        builder = (URIBuilder) createURIBuilder.invoke(request);
-        assertEquals(expectedURI, builder.toString());
+        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
+        assertEquals(EXPECTED_URI, builder.toString());
 
         request.setBaseUrl("http://something.com/");
         request.setEndpoint("testing/test/");
-        builder = (URIBuilder) createURIBuilder.invoke(request);
-        assertEquals(expectedURI, builder.toString());
+        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
+        assertEquals(EXPECTED_URI, builder.toString());
 
         request.setBaseUrl("http://something.com");
         request.setEndpoint("testing/test/");
-        builder = (URIBuilder) createURIBuilder.invoke(request);
-        assertEquals(expectedURI, builder.toString());
+        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
+        assertEquals(EXPECTED_URI, builder.toString());
 
         request.setBasicAuth("username", "password");
-        builder = (URIBuilder) createURIBuilder.invoke(request);
-        builder = (URIBuilder) addParametersToURIBuilder.invoke(request, builder);
-        String actualAuthParam = builder.getQueryParams().get(0).toString();
-        assertEquals(expectedAuthParam, actualAuthParam);
+        HttpRequestBase client = Whitebox.getInternalState(request, "request");
+        String actualAuthHeader = client.getAllHeaders()[0].toString();
+        assertEquals(EXPECTED_HEADER, actualAuthHeader);
     }
 }
