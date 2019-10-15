@@ -17,6 +17,7 @@
 
 <img src="./images/logo.png" alt="Eiffel Shared Java" width="350"/>
 
+[![Build Status](https://travis-ci.org/eiffel-community/eiffel-commons.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-commons)
 [![](https://jitpack.io/v/eiffel-community/eiffel-commons.svg)](https://jitpack.io/#eiffel-community/eiffel-commons)
 
 # Eiffel Commons
