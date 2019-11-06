@@ -1,16 +1,10 @@
 sudo: required
-
 dist: xenial
-
 language: java
-
-# services:
-#   - docker 
 
 env:
   - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
-# Run before every job
 before_install:
   - sudo apt-get update
   - sudo apt-get install -y openjdk-8-jdk
@@ -19,30 +13,12 @@ before_install:
   - uname -a
   - chmod +x pom.xml
 
-
-# This is only run before integrationTests job
-# To ensure docker containers are fully up and running we sleep 20s
-# before_script:
-#   - cd src/main/docker/
-#   - source env.bash
-#   - docker-compose up -d
-#   - sleep 60
-#   - cd ../../../
-
-
-# Generate site documentation using mvn site plugin
-# before_deploy:
-#   - rm -rf docs
-#   - mvn site -B
-
-
 # Using default stage 'test' for all our test jobs, and only running deploy stage
 # (after merge) to master branch
 stages:
   - test
-#   - name: deploy
-#     if: branch = master
-
+  - name: report_coverage
+    if: branch = master AND type != pull_request
 
 # List of jobs to run, tied to specific stages
 jobs:
@@ -52,3 +28,10 @@ jobs:
       before_script: skip
       script:
         - mvn test -B
+    - stage: report_coverage
+      name: report_coverage
+      # Generating test coverage report and publishing to Codacy
+      script:
+        - mvn cobertura:cobertura -B
+        - curl -Ls -o codacy-coverage-reporter-assembly.jar https://github.com/codacy/codacy-coverage-reporter/releases/download/6.0.2/codacy-coverage-reporter-6.0.2-assembly.jar
+        - java -jar codacy-coverage-reporter-assembly.jar report -l Java -r target/site/cobertura/coverage.xml
