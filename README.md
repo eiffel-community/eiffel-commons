@@ -26,7 +26,7 @@
 ## Java Library
 *   Jenkins Manager
 *   RegExProvider
-*   Subsceription object
+*   Subscription object
 *   HttpRequest
 
 ## About this repository
