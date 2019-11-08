@@ -3,9 +3,9 @@ dist: xenial
 language: java
 
 env:
-  - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
   global:
     - CODACY_COVERAGE_REPORTER_VERSION=6.0.2
+  - JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-amd64
 
 before_install:
   - sudo apt-get update
