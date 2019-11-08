@@ -3,7 +3,6 @@ exclude_paths:
   - 'spec/**/*'
   - 'benchmarks/**/*'
   - '*.min.js'
-  - '**/tests/**'
   - 'wiki/**'
   - '.github/**'
   - 'CODE_OF_CONDUCT.md'
