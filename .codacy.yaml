@@ -1,8 +1,4 @@
 exclude_paths:
-  - '.bundle/**'
-  - 'spec/**/*'
-  - 'benchmarks/**/*'
-  - '*.min.js'
   - 'wiki/**'
   - '.github/**'
   - 'CODE_OF_CONDUCT.md'
