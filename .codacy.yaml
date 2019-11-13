@@ -1,0 +1,5 @@
+exclude_paths:
+  - 'wiki/**'
+  - '.github/**'
+  - 'CODE_OF_CONDUCT.md'
+  - 'CONTRIBUTING.md'

@@ -18,20 +18,23 @@
 <img src="./images/logo.png" alt="Eiffel Shared Java" width="350"/>
 
 [![Build Status](https://travis-ci.org/eiffel-community/eiffel-commons.svg?branch=master)](https://travis-ci.org/eiffel-community/eiffel-commons)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d22bd08ce36a4f43b8d21ede2848ce81)](https://www.codacy.com/app/eiffel-commons-maintainers/eiffel-commons?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=eiffel-community/eiffel-commons&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d22bd08ce36a4f43b8d21ede2848ce81)](https://www.codacy.com/app/eiffel-commons-maintainers/eiffel-commons?utm_source=github.com&utm_medium=referral&utm_content=eiffel-community/eiffel-commons&utm_campaign=Badge_Coverage)
 [![](https://jitpack.io/v/eiffel-community/eiffel-commons.svg)](https://jitpack.io/#eiffel-community/eiffel-commons)
 
 # Eiffel Commons
 ## Java Library
-* Jenkins Manager
-* RegExProvider
-* Subsceription object
+*   Jenkins Manager
+*   RegExProvider
+*   Subscription object
+*   HttpRequest
 
-# About this repository
+## About this repository
 The contents of this repository are licensed under the [Apache License 2.0](./LICENSE).
 
 To get involved, please see [Code of Conduct](./CODE_OF_CONDUCT.md) and [contribution guidelines](./CONTRIBUTING.md).
 
-# About Eiffel
+## About Eiffel
 This repository forms part of the Eiffel Community. Eiffel is a protocol for technology agnostic machine-to-machine communication in continuous integration and delivery pipelines, aimed at securing scalability, flexibility and traceability. Eiffel is based on the concept of decentralized real time messaging, both to drive the continuous integration and delivery system and to document it.
 
 Visit [Eiffel Community](https://eiffel-community.github.io) to get started and get involved.
