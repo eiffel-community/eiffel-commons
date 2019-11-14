@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.eiffelcommons.utils;
+package com.ericsson.eiffelcommons.http;
 
 import java.io.IOException;
 
@@ -44,20 +44,6 @@ public class HttpExecutor {
         }
 
         return instance;
-    }
-
-    /**
-     * Close existing HttpClient and create a new one.
-     *
-     * @throws IOException
-     */
-    public void recreateHttpClient() throws IOException {
-        if (this.client != null) {
-            this.client.close();
-
-        }
-        this.client = HttpClientBuilder.create()
-                                       .build();
     }
 
     /**
