@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.ClientProtocolException;
@@ -331,9 +332,9 @@ public class HttpRequest {
      * @throws URISyntaxException
      */
     private URIBuilder createURIBuilder() throws URISyntaxException {
-        if (endpoint != null && !endpoint.isEmpty() && endpoint.startsWith("/")) {
+        if (!StringUtils.isEmpty(endpoint) && endpoint.startsWith("/")) {
             return new URIBuilder(baseUrl + endpoint);
-        } else if (endpoint != null && !endpoint.isEmpty()) {
+        } else if (!StringUtils.isEmpty(endpoint)) {
             return new URIBuilder(baseUrl + "/" + endpoint);
         } else {
             return new URIBuilder(baseUrl);
