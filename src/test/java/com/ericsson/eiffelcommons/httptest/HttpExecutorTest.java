@@ -78,6 +78,7 @@ public class HttpExecutorTest {
         instance = Whitebox.getInternalState(executor, "instance", HttpExecutor.class);
         assertNotNull(instance);
 
+        // Reset static instance
         instance = null;
         Whitebox.setInternalState(HttpExecutor.class, "instance", instance);
     }

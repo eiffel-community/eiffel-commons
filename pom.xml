@@ -17,14 +17,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>maven-official-repository</id>
-            <name>Maven Official Repository</name>
-            <url>https://repo.maven.apache.org</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>javax.ws.rs</groupId>
