@@ -14,20 +14,26 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.ericsson.eiffelcommons.utils;
+package com.ericsson.eiffelcommons.http;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -36,9 +42,11 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -61,10 +69,10 @@ public class HttpRequest {
     protected String endpoint;
 
     @Getter
-    protected Map<String, String> params;
+    protected ArrayList<NameValuePair> params;
 
     public HttpRequest() {
-        params = new HashMap<>();
+        params = new ArrayList<NameValuePair>();
         initExecutor(false);
     }
 
@@ -78,7 +86,7 @@ public class HttpRequest {
     }
 
     public HttpRequest(HttpMethod method, boolean persistentClient) {
-        params = new HashMap<>();
+        params = new ArrayList<NameValuePair>();
         setHttpMethod(method);
         initExecutor(persistentClient);
     }
@@ -204,7 +212,7 @@ public class HttpRequest {
      * @return HttpRequest
      */
     public HttpRequest addParameter(String key, String value) {
-        params.put(key, value);
+        params.add(new BasicNameValuePair(key, value));
         return this;
     }
 
@@ -290,9 +298,9 @@ public class HttpRequest {
      */
     public ResponseEntity performRequest()
             throws URISyntaxException, ClientProtocolException, IOException {
-        URIBuilder builder = createURIBuilder();
-        builder = addParametersToURIBuilder(builder);
-        request.setURI(builder.build());
+        URI uri = createURI();
+        uri = addParametersToURI(uri);
+        request.setURI(uri);
         return executor.executeRequest(request);
     }
 
@@ -301,41 +309,44 @@ public class HttpRequest {
      *
      * @return URI
      * @throws URISyntaxException
+     * @throws MalformedURLException
      */
-    public URI getURI() throws URISyntaxException {
-        URIBuilder builder = createURIBuilder();
-        return builder.build();
+    @Deprecated
+    public URI getURI() throws MalformedURLException, URISyntaxException {
+        return createURI();
     }
 
     /**
      * Function that adds parameters to the URIBuilder
      *
-     * @param URIBuilder
-     * @return URIBuilder
+     * @param oldUri
+     * @return URI
+     * @throws URISyntaxException
      */
-    private URIBuilder addParametersToURIBuilder(URIBuilder builder) {
-        if (!params.isEmpty()) {
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                builder.addParameter(entry.getKey(), entry.getValue());
-            }
-        }
-
-        return builder;
+    private URI addParametersToURI(URI oldUri) throws URISyntaxException {
+        String query = URLEncodedUtils.format(params, Consts.UTF_8);
+        URI newUri = new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(), query,
+                oldUri.getFragment());
+        return newUri;
     }
 
     /**
      * Function that creates the URI from the baseUrl and endpoint
      *
      * @param
-     * @return URIBuilder
+     * @return URI
+     * @throws MalformedURLException
      * @throws URISyntaxException
      */
-    private URIBuilder createURIBuilder() throws URISyntaxException {
-        if (endpoint.startsWith("/")) {
-            return new URIBuilder(baseUrl + endpoint);
+    private URI createURI() throws MalformedURLException, URISyntaxException {
+        if (!StringUtils.isEmpty(endpoint) && endpoint.startsWith("/")) {
+            return new URL(baseUrl + endpoint).toURI();
+        } else if (!StringUtils.isEmpty(endpoint)) {
+            return new URL(baseUrl + "/" + endpoint).toURI();
         } else {
-            return new URIBuilder(baseUrl + "/" + endpoint);
+            return new URL(baseUrl).toURI();
         }
+
     }
 
     /**
