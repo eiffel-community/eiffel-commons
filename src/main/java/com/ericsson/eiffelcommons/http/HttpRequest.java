@@ -317,6 +317,25 @@ public class HttpRequest {
     }
 
     /**
+     * Function that creates the URI from the baseUrl and endpoint
+     *
+     * @param
+     * @return URI
+     * @throws MalformedURLException
+     * @throws URISyntaxException
+     */
+    public URI createURI() throws MalformedURLException, URISyntaxException {
+        if (!StringUtils.isEmpty(endpoint) && endpoint.startsWith("/")) {
+            return new URL(baseUrl + endpoint).toURI();
+        } else if (!StringUtils.isEmpty(endpoint)) {
+            return new URL(baseUrl + "/" + endpoint).toURI();
+        } else {
+            return new URL(baseUrl).toURI();
+        }
+
+    }
+
+    /**
      * Function that adds parameters to the URIBuilder
      *
      * @param oldUri
@@ -328,25 +347,6 @@ public class HttpRequest {
         URI newUri = new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(), query,
                 oldUri.getFragment());
         return newUri;
-    }
-
-    /**
-     * Function that creates the URI from the baseUrl and endpoint
-     *
-     * @param
-     * @return URI
-     * @throws MalformedURLException
-     * @throws URISyntaxException
-     */
-    private URI createURI() throws MalformedURLException, URISyntaxException {
-        if (!StringUtils.isEmpty(endpoint) && endpoint.startsWith("/")) {
-            return new URL(baseUrl + endpoint).toURI();
-        } else if (!StringUtils.isEmpty(endpoint)) {
-            return new URL(baseUrl + "/" + endpoint).toURI();
-        } else {
-            return new URL(baseUrl).toURI();
-        }
-
     }
 
     /**
