@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.ericsson.eiffelcommons.utils;
+package com.ericsson.eiffelcommons.http;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.client.ClientProtocolException;
@@ -331,10 +332,12 @@ public class HttpRequest {
      * @throws URISyntaxException
      */
     private URIBuilder createURIBuilder() throws URISyntaxException {
-        if (endpoint.startsWith("/")) {
+        if (!StringUtils.isEmpty(endpoint) && endpoint.startsWith("/")) {
             return new URIBuilder(baseUrl + endpoint);
-        } else {
+        } else if (!StringUtils.isEmpty(endpoint)) {
             return new URIBuilder(baseUrl + "/" + endpoint);
+        } else {
+            return new URIBuilder(baseUrl);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ericsson.eiffelcommons.Utilstest;
+package com.ericsson.eiffelcommons.utilstest;
 
 import static org.junit.Assert.assertEquals;
 
