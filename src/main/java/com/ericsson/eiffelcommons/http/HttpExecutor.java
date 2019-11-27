@@ -47,20 +47,6 @@ public class HttpExecutor {
     }
 
     /**
-     * Close existing HttpClient and create a new one.
-     *
-     * @throws IOException
-     */
-    public void recreateHttpClient() throws IOException {
-        if (this.client != null) {
-            this.client.close();
-
-        }
-        this.client = HttpClientBuilder.create()
-                                       .build();
-    }
-
-    /**
      * Handle the response from a HTTP request
      *
      * @param request
