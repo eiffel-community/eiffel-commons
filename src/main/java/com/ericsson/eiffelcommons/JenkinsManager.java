@@ -31,8 +31,8 @@ import org.json.JSONObject;
 
 import com.ericsson.eiffelcommons.helpers.MediaType;
 import com.ericsson.eiffelcommons.http.HttpRequest;
-import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
 import com.ericsson.eiffelcommons.http.ResponseEntity;
+import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
 
 public class JenkinsManager {
 

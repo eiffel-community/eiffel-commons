@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -21,7 +22,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
@@ -56,29 +56,28 @@ public class HttpRequestTest {
 
     @Test
     public void testBuildingOfURI() throws Exception {
+
         HttpRequest request = new HttpRequest(HttpMethod.POST);
+
         request.setBaseUrl(URL_1);
         request.setEndpoint(ENDPOINT_1);
-        URIBuilder builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
-        assertEquals(EXPECTED_URI, builder.toString());
+        URI uri = (URI) Whitebox.invokeMethod(request, "createURI");
+        assertEquals(EXPECTED_URI, uri.toString());
 
-        request = new HttpRequest(HttpMethod.GET);
         request.setBaseUrl(URL_2);
         request.setEndpoint(ENDPOINT_1);
-        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
-        assertEquals(EXPECTED_URI, builder.toString());
+        uri = (URI) Whitebox.invokeMethod(request, "createURI");
+        assertEquals(EXPECTED_URI, uri.toString());
 
-        request = new HttpRequest(HttpMethod.DELETE);
         request.setBaseUrl(URL_2);
         request.setEndpoint(ENDPOINT_2);
-        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
-        assertEquals(EXPECTED_URI, builder.toString());
+        uri = (URI) Whitebox.invokeMethod(request, "createURI");
+        assertEquals(EXPECTED_URI, uri.toString());
 
-        request = new HttpRequest(HttpMethod.PUT);
         request.setBaseUrl(URL_1);
         request.setEndpoint(ENDPOINT_2);
-        builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
-        assertEquals(EXPECTED_URI, builder.toString());
+        uri = (URI) Whitebox.invokeMethod(request, "createURI");
+        assertEquals(EXPECTED_URI, uri.toString());
     }
 
     @Test
@@ -186,6 +185,18 @@ public class HttpRequestTest {
     }
 
     @Test
+    public void testAddParametersToURI() throws Exception {
+        HttpRequest request = new HttpRequest(HttpMethod.GET);
+        request.setBaseUrl(URL_1)
+               .addParameter(PARAMETER_KEY_1, PARAMETER_VALUE_1)
+               .addParameter(PARAMETER_KEY_2, PARAMETER_VALUE_2);
+        URI uri = (URI) Whitebox.invokeMethod(request, "createURI");
+        URI newUri = (URI) Whitebox.invokeMethod(request, "addParametersToURI", uri);
+        String expectedURI = URL_1 + "?" + PARAMETER_KEY_1 + "=" + PARAMETER_VALUE_1 + "&"
+                + PARAMETER_KEY_2 + "=" + PARAMETER_VALUE_2;
+        assertEquals(expectedURI, newUri.toString());
+    }
+
     public void testHeaderProperty() {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
         request.addHeader(HEADER_KEY_1, HEADER_VALUE_1);
@@ -206,10 +217,10 @@ public class HttpRequestTest {
     }
 
     @Test
-    public void testGetURI() throws URISyntaxException {
+    public void testGetURI() throws MalformedURLException, URISyntaxException {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
         request.setBaseUrl(URL_1).setEndpoint(ENDPOINT_1);
-        URI uri = request.getURI();
+        URI uri = request.createURI();
         String fullURI = uri.toString();
         assertEquals(URL_1 + ENDPOINT_1, fullURI);
     }
@@ -222,9 +233,8 @@ public class HttpRequestTest {
         request.performRequest();
     }
 
-    @Test(expected = ClientProtocolException.class)
-    public void testPerformRequestBadProtocol()
-            throws ClientProtocolException, URISyntaxException, IOException {
+    @Test(expected = MalformedURLException.class)
+    public void testPerformRequestBadProtocol() throws ClientProtocolException, URISyntaxException, IOException {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
         request.setBaseUrl(URL_BAD_PROTOCOL);
         request.performRequest();
