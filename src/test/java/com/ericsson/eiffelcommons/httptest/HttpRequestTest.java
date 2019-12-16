@@ -156,7 +156,7 @@ public class HttpRequestTest {
         actualBody = IOUtils.toString(entity.getContent(), "UTF-8");
         stream.close();
         assertTrue(actualHeader.contains(BODY_HEADER_DEFAULT));
-        assertEquals(BODY_CONTENT + "\n", actualBody);
+        assertEquals(BODY_CONTENT, actualBody.replace(System.getProperty("line.separator"), ""));
     }
 
     @Test(expected = IOException.class)
