@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -156,7 +157,7 @@ public class HttpRequestTest {
         actualBody = IOUtils.toString(entity.getContent(), "UTF-8");
         stream.close();
         assertTrue(actualHeader.contains(BODY_HEADER_DEFAULT));
-        assertEquals(BODY_CONTENT + "\n", actualBody);
+        assertEquals(BODY_CONTENT, actualBody.replace(System.getProperty("line.separator"), ""));
     }
 
     @Test(expected = IOException.class)

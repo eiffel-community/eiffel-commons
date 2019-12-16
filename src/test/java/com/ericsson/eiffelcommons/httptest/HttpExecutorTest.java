@@ -26,7 +26,7 @@ import com.ericsson.eiffelcommons.http.ResponseEntity;
 
 public class HttpExecutorTest {
 
-    private static final String URL_FAKE = "http://fake.com";
+    private static final String URL_FAKE = "http://ensure-non-existant-webpage.com";
     private static final String URL_MOCK = "http://localhost:{port}";
     private static final String ENDPOINT_MOCK = "/endpoint";
     private static final String RESPONSE_MOCK = "{\"message\":\"dummy\"}";
