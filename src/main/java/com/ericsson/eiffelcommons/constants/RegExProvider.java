@@ -1,4 +1,4 @@
-package com.ericsson.eiffelcommons.helpers;
+package com.ericsson.eiffelcommons.constants;
 
 public final class RegExProvider {
 

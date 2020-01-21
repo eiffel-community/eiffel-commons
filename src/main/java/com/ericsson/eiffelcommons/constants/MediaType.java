@@ -14,15 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.eiffelcommons.helpers;
+package com.ericsson.eiffelcommons.constants;
 
 public class MediaType {
 
     public final static String APPLICATION_XML = "application/xml";
-
     public final static String APPLICATION_JSON = "application/json";
-
     public final static String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
-
     public static final String TEXT_XML = "text/xml";
+
+    private MediaType() {
+        throw new AssertionError();
+    }
 }

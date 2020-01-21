@@ -1,4 +1,4 @@
-package com.ericsson.eiffelcommons.subscriptionobjecttest;
+package com.ericsson.eiffelcommons.subscriptionobject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ericsson.eiffelcommons.helpers.MediaType;
+import com.ericsson.eiffelcommons.constants.MediaType;
 import com.ericsson.eiffelcommons.subscriptionobject.MailSubscriptionObject;
 import com.ericsson.eiffelcommons.subscriptionobject.RestPostSubscriptionObject;
 

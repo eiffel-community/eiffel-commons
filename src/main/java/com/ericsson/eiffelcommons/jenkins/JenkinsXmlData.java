@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.eiffelcommons.helpers;
+package com.ericsson.eiffelcommons.jenkins;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -25,7 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
 
-import com.ericsson.eiffelcommons.utils.Utils;
+import com.ericsson.eiffelcommons.utils.FileUtils;
 
 /**
  * This class is a builder for jenkins xml data string.
@@ -59,7 +59,7 @@ public class JenkinsXmlData {
      * @throws IOException
      */
     public JenkinsXmlData() throws FileNotFoundException {
-        String xmlJsonDataString = Utils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
+        String xmlJsonDataString = FileUtils.getResourceFileAsString(JENKINS_TEMPLATE_FILE_NAME);
         xmlJsonData = XML.toJSONObject(xmlJsonDataString);
         builders = new JSONObject();
         properties = new JSONObject();

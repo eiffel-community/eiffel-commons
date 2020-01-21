@@ -1,10 +1,10 @@
-package com.ericsson.eiffelcommons.utilstest;
+package com.ericsson.eiffelcommons.constants;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.ericsson.eiffelcommons.helpers.RegExProvider;
+import com.ericsson.eiffelcommons.constants.RegExProvider;
 
 public class RegExProviderTest {
 

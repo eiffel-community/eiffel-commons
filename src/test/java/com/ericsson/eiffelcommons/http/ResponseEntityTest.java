@@ -1,4 +1,4 @@
-package com.ericsson.eiffelcommons.httptest;
+package com.ericsson.eiffelcommons.http;
 
 import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
