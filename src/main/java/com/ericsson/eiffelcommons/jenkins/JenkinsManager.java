@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.eiffelcommons;
+package com.ericsson.eiffelcommons.jenkins;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,7 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.ericsson.eiffelcommons.helpers.MediaType;
+import com.ericsson.eiffelcommons.constants.MediaType;
 import com.ericsson.eiffelcommons.http.HttpRequest;
 import com.ericsson.eiffelcommons.http.ResponseEntity;
 import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;

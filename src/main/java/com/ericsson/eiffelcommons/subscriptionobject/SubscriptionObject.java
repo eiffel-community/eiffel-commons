@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.ericsson.eiffelcommons.utils.Utils;
+import com.ericsson.eiffelcommons.utils.FileUtils;
 
 import lombok.Getter;
 
@@ -25,7 +25,7 @@ public abstract class SubscriptionObject<T extends SubscriptionObject<?>> {
      * @throws IOException
      */
     public SubscriptionObject(final Class<T> selfClass, String subscriptionName) throws IOException {
-        subscriptionJson = Utils.getResourceFileAsJsonObject(SUBSCRIPTION_TEMPLATE_PATH);
+        subscriptionJson = FileUtils.getResourceFileAsJsonObject(SUBSCRIPTION_TEMPLATE_PATH);
         subscriptionJson.put("subscriptionName", subscriptionName);
         this.self = selfClass.cast(this);
     }

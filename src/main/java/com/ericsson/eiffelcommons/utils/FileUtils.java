@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Utils {
+public class FileUtils {
 
     /**
      * Return a resource file in string format.
