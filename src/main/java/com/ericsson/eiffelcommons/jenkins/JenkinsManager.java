@@ -73,9 +73,7 @@ public class JenkinsManager {
      */
     public JenkinsManager(String protocol, String host, int port, String username, String password)
             throws ClientProtocolException, URISyntaxException, IOException {
-        this.jenkinsBaseUrl = String.format("%s://%s:%d", protocol, host, port);
-        this.encoding = createEncodingFromUsernameAndPassword(username, password);
-        this.crumb = fetchCrumbFromJenkins();
+        this(String.format("%s://%s:%d", protocol, host, port), username, password);
     }
 
     /**
@@ -164,7 +162,8 @@ public class JenkinsManager {
     @Deprecated
     public boolean buildJobWithFormPostParams(String jobName, String jobToken, String body)
             throws Exception {
-        // ! This method currently doesn't work with a fixed GET request as it will fail to set the body !
+        // ! This method currently doesn't work with a fixed GET request as it will fail to set the
+        // body !
         // ! Unclear if this should even be possible in Jenkins !
         String buildType = "build";
         boolean success = executeJobTriggering(jobName, jobToken, buildType,
@@ -226,7 +225,7 @@ public class JenkinsManager {
         dataRecieved = response.getStatusCode() == HttpStatus.SC_OK;
 
         if (!dataRecieved) {
-            String message = "Failed to job data from job " + jobName + " and build "
+            String message = "Failed to get status data from job " + jobName + " and build "
                     + buildNumberString
                     + ". Status code: " + response.getStatusCodeValue()
                     + ". Possible not built yet.";
@@ -474,7 +473,7 @@ public class JenkinsManager {
     }
 
     /**
-     * Function that makes a get request towards jenkins for 60 seconds or untill jenkins is
+     * Function that makes a get request towards jenkins for 60 seconds or until jenkins is
      * responding. Returns true if jenkins was down when it started and became available. Returns
      * false if jenkins never responded or never went down.
      *
