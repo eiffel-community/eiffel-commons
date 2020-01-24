@@ -43,56 +43,46 @@ public class JenkinsManager {
     /**
      * Constructor, takes jenkins baseUrl, username and password.
      *
-     * @param jenkinsBaseUrl
-     *            :: Jenkins base url http://somehost:123
-     * @param username
-     *            :: Jenkins username as String
-     * @param password
-     *            :: Jenkins password or API-token
+     * @param jenkinsBaseUrl :: Jenkins base url http://somehost:123
+     * @param username       :: Jenkins username as String
+     * @param password       :: Jenkins password or API-token
      * @throws URISyntaxException
      * @throws JSONException
      * @throws IOException
      * @throws ClientProtocolException
      */
     public JenkinsManager(String jenkinsBaseUrl, String username, String password)
-            throws URISyntaxException, JSONException, ClientProtocolException, IOException {
+            throws ClientProtocolException, URISyntaxException, IOException {
         this.jenkinsBaseUrl = jenkinsBaseUrl;
         this.encoding = createEncodingFromUsernameAndPassword(username, password);
-        this.crumb = getCrumb();
+        this.crumb = fetchCrumbFromJenkins();
     }
 
     /**
      * Constructor, takes jenkins protocol, host, port, username and password.
      *
-     * @param protocol
-     *            :: http/https protocol to jenkins as String
-     * @param host
-     *            :: Host name to jenkins as String
-     * @param port
-     *            :: Port number to jenkins as int
-     * @param username
-     *            :: Jenkins username as String
-     * @param password
-     *            :: Jenkins password or API-token
+     * @param protocol :: http/https protocol to jenkins as String
+     * @param host     :: Host name to jenkins as String
+     * @param port     :: Port number to jenkins as int
+     * @param username :: Jenkins username as String
+     * @param password :: Jenkins password or API-token
      * @throws URISyntaxException
      * @throws JSONException
      * @throws IOException
      * @throws ClientProtocolException
      */
     public JenkinsManager(String protocol, String host, int port, String username, String password)
-            throws URISyntaxException, JSONException, ClientProtocolException, IOException {
+            throws ClientProtocolException, URISyntaxException, IOException {
         this.jenkinsBaseUrl = String.format("%s://%s:%d", protocol, host, port);
         this.encoding = createEncodingFromUsernameAndPassword(username, password);
-        this.crumb = getCrumb();
+        this.crumb = fetchCrumbFromJenkins();
     }
 
     /**
      * Creates a jenkins job with a given name using the XML data as input for job configuration
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param jobXmlData
-     *            :: XML data as String
+     * @param jobName    :: Name of job as String
+     * @param jobXmlData :: XML data as String
      * @return
      * @throws Exception
      */
@@ -116,8 +106,10 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_OK;
 
         if (!success) {
-            String message = "Failed to create a jenkins job with name " + jobName + " using jenkins crumb " + crumb
-                    + ".\nAnd job data:\n" + jobXmlData + "\nStatus code was: " + response.getStatusCodeValue() + ".";
+            String message = "Failed to create a jenkins job with name " + jobName
+                    + " using jenkins crumb " + crumb
+                    + ".\nAnd job data:\n" + jobXmlData + "\nStatus code was: "
+                    + response.getStatusCodeValue() + ".";
             throw new Exception(message);
         }
 
@@ -129,17 +121,16 @@ public class JenkinsManager {
      *
      * Warning: Deletes old job if exist.
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param jobXmlData
-     *            :: XML data as String
+     * @param jobName    :: Name of job as String
+     * @param jobXmlData :: XML data as String
      * @return
      * @throws Exception
      */
     public boolean forceCreateJob(String jobName, String jobXmlData) throws Exception {
         try {
             deleteJob(jobName);
-        } catch(Exception e) {}
+        } catch (Exception e) {
+        }
 
         return createJob(jobName, jobXmlData);
     }
@@ -147,16 +138,15 @@ public class JenkinsManager {
     /**
      * This function that trigger a build on a jenkins job
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param jobToken
-     *            :: Token used to trigger the job as String
+     * @param jobName  :: Name of job as String
+     * @param jobToken :: Token used to trigger the job as String
      * @return
      * @throws Exception
      */
     public boolean buildJob(String jobName, String jobToken) throws Exception {
         String buildType = "build";
-        boolean success = executeJobTriggering(jobName, jobToken, buildType, MediaType.APPLICATION_FORM_URLENCODED,
+        boolean success = executeJobTriggering(jobName, jobToken, buildType,
+                MediaType.APPLICATION_FORM_URLENCODED,
                 null, null);
 
         return success;
@@ -165,18 +155,20 @@ public class JenkinsManager {
     /**
      * This function that trigger a build on a jenkins job with given body
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param jobToken
-     *            :: Token used to trigger the job as String
-     * @param body
-     *            :: Body as string "json={param:"param"}"
+     * @param jobName  :: Name of job as String
+     * @param jobToken :: Token used to trigger the job as String
+     * @param body     :: Body as string "json={param:"param"}"
      * @return
      * @throws Exception
      */
-    public boolean buildJobWithFormPostParams(String jobName, String jobToken, String body) throws Exception {
+    @Deprecated
+    public boolean buildJobWithFormPostParams(String jobName, String jobToken, String body)
+            throws Exception {
+        // ! This method currently doesn't work with a fixed GET request as it will fail to set the body !
+        // ! Unclear if this should even be possible in Jenkins !
         String buildType = "build";
-        boolean success = executeJobTriggering(jobName, jobToken, buildType, MediaType.APPLICATION_FORM_URLENCODED,
+        boolean success = executeJobTriggering(jobName, jobToken, buildType,
+                MediaType.APPLICATION_FORM_URLENCODED,
                 null, body);
 
         return success;
@@ -185,35 +177,34 @@ public class JenkinsManager {
     /**
      * This function that trigger a build on a jenkins job with given parameters
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param jobToken
-     *            :: Token used to trigger the job as String
-     * @param parameters
-     *            :: Parameters as Map"
+     * @param jobName    :: Name of job as String
+     * @param jobToken   :: Token used to trigger the job as String
+     * @param parameters :: Parameters as Map"
      * @return
      * @throws Exception
      */
-    public boolean buildJobWithParameters(String jobName, String jobToken, Map<String, String> parameters)
+    public boolean buildJobWithParameters(String jobName, String jobToken,
+            Map<String, String> parameters)
             throws Exception {
         String buildType = "buildWithParameters";
-        boolean success = executeJobTriggering(jobName, jobToken, buildType, MediaType.APPLICATION_JSON, parameters,
+        boolean success = executeJobTriggering(jobName, jobToken, buildType,
+                MediaType.APPLICATION_JSON, parameters,
                 null);
 
         return success;
     }
 
     /**
-     * This function recieves a jenkins job name and and a build number, then returns the build status as JSONObject.
+     * This function recieves a jenkins job name and and a build number, then returns the build
+     * status as JSONObject.
      *
-     * @param jobName
-     *            :: Name of job as String
-     * @param buildNumber
-     *            :: build number as Integer, defaults to lastSuccessfulBuild
+     * @param jobName     :: Name of job as String
+     * @param buildNumber :: build number as Integer, defaults to lastSuccessfulBuild
      * @return JSONObject
      * @throws Exception
      */
-    public JSONObject getJenkinsBuildStatusData(String jobName, Integer buildNumber) throws Exception {
+    public JSONObject getJenkinsBuildStatusData(String jobName, Integer buildNumber)
+            throws Exception {
         boolean dataRecieved = false;
         String buildNumberString = "lastBuild";
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
@@ -235,8 +226,10 @@ public class JenkinsManager {
         dataRecieved = response.getStatusCode() == HttpStatus.SC_OK;
 
         if (!dataRecieved) {
-            String message = "Failed to job data from job " + jobName + " and build " + buildNumberString
-                    + ". Status code: " + response.getStatusCodeValue() + ". Possible not built yet.";
+            String message = "Failed to job data from job " + jobName + " and build "
+                    + buildNumberString
+                    + ". Status code: " + response.getStatusCodeValue()
+                    + ". Possible not built yet.";
             throw new Exception(message);
         }
 
@@ -247,8 +240,7 @@ public class JenkinsManager {
     /**
      * This function recieves a jenkins job name and returns the build status as JSONObject.
      *
-     * @param jobName
-     *            :: Name of job as String
+     * @param jobName :: Name of job as String
      * @return JSONObject
      * @throws Exception
      */
@@ -260,8 +252,7 @@ public class JenkinsManager {
      *
      * This function recieves a jenkins job name and deletes that job from the jenkins system
      *
-     * @param jobName
-     *            :: Name of job as String
+     * @param jobName :: Name of job as String
      * @return JSONObject
      * @throws Exception
      */
@@ -295,8 +286,7 @@ public class JenkinsManager {
     /**
      * Detect if jenkins has a given plugin.
      *
-     * @param plugin
-     *            :: Plugin name
+     * @param plugin :: Plugin name
      * @return
      * @throws Exception
      */
@@ -337,10 +327,8 @@ public class JenkinsManager {
     /**
      * Install a given plugin into jenkins.
      *
-     * @param plugin
-     *            :: Plugin name
-     * @param version
-     *            :: Plugin version
+     * @param plugin  :: Plugin name
+     * @param version :: Plugin version
      * @return
      * @throws Exception
      */
@@ -355,7 +343,8 @@ public class JenkinsManager {
             throw new Exception("A version must be speciified for the Jenkins Plugin.");
         }
 
-        String scriptData = "<jenkins><install plugin='" + plugin + "@" + version + "' /></jenkins>";
+        String scriptData = "<jenkins><install plugin='" + plugin + "@" + version
+                + "' /></jenkins>";
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
                    .addHeader("Authorization", "Basic " + encoding)
@@ -368,7 +357,8 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
 
         if (!success) {
-            String message = "Failed to add a plugin with name " + plugin + " and version " + version
+            String message = "Failed to add a plugin with name " + plugin + " and version "
+                    + version
                     + " to Jenkins. Response code: " + response.getStatusCodeValue() + " and body: "
                     + response.getBody();
             throw new Exception(message);
@@ -399,7 +389,8 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
 
         if (!success) {
-            String message = "Failed to restart Jenkins. Response code: " + response.getStatusCodeValue()
+            String message = "Failed to restart Jenkins. Response code: "
+                    + response.getStatusCodeValue()
                     + " and body: " + response.getBody();
             throw new Exception(message);
         }
@@ -407,6 +398,18 @@ public class JenkinsManager {
         restartVerified = verifyJenkinsRestart();
 
         return success && restartVerified;
+    }
+
+    public String getJenkinsBaseUrl() {
+        return this.jenkinsBaseUrl;
+    }
+
+    public String getEncoding() {
+        return this.encoding;
+    }
+
+    public String getCrumb() {
+        return this.crumb;
     }
 
     /**
@@ -421,8 +424,9 @@ public class JenkinsManager {
      * @return
      * @throws Exception
      */
-    private boolean executeJobTriggering(String jobName, String jobToken, String buildType, String mediatype,
-                                         Map<String, String> parameters, String body)
+    private boolean executeJobTriggering(String jobName, String jobToken, String buildType,
+            String mediatype,
+            Map<String, String> parameters, String body)
             throws Exception {
         jobNameTokenValidation(jobName, jobToken);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
@@ -445,7 +449,8 @@ public class JenkinsManager {
         Boolean success = response.getStatusCode() == HttpStatus.SC_CREATED;
 
         if (!success) {
-            String message = "Failed to trigger a jenkins job " + jobName + " using token " + jobToken
+            String message = "Failed to trigger a jenkins job " + jobName + " using token "
+                    + jobToken
                     + " Status code: " + response.getStatusCodeValue() + ".";
             throw new Exception(message);
         }
@@ -463,15 +468,15 @@ public class JenkinsManager {
         if (jobName == null || jobName.isEmpty()) {
             throw new Exception("Cannot trigger a jenkins job without a job name.");
         }
-        if (jobToken == null) {
+        if (jobToken == null || jobToken.isEmpty()) {
             throw new Exception("A job token is required to trigger a jenkins job.");
         }
     }
 
     /**
-     * Function that makes a get request towards jenkins for 60 seconds or untill jenkins is responding. Returns true if
-     * jenkins was down when it started and became available. Returns false if jenkins never responded or never went
-     * down.
+     * Function that makes a get request towards jenkins for 60 seconds or untill jenkins is
+     * responding. Returns true if jenkins was down when it started and became available. Returns
+     * false if jenkins never responded or never went down.
      *
      * @return
      * @throws Exception
@@ -490,7 +495,8 @@ public class JenkinsManager {
         do {
             Thread.sleep(3000);
             response = httpRequest.performRequest();
-            serverDownRecieved = response.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE || serverDownRecieved;
+            serverDownRecieved = response.getStatusCode() == HttpStatus.SC_SERVICE_UNAVAILABLE
+                    || serverDownRecieved;
             success = response.getStatusCode() == HttpStatus.SC_OK || success;
         } while (!success && stopTime > System.currentTimeMillis());
 
@@ -527,7 +533,8 @@ public class JenkinsManager {
      * @throws ClientProtocolException
      * @throws Exception
      */
-    private String getCrumb() throws ClientProtocolException, URISyntaxException, IOException {
+    private String fetchCrumbFromJenkins()
+            throws ClientProtocolException, URISyntaxException, IOException {
         String crumb = "";
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
 
