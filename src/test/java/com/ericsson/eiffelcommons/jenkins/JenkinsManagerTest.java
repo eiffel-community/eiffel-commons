@@ -1,6 +1,7 @@
 package com.ericsson.eiffelcommons.jenkins;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.mockserver.model.HttpRequest.request;
@@ -112,7 +113,7 @@ public class JenkinsManagerTest {
         setUpFailCrumbEndpoint();
         JenkinsManager jenkins = new JenkinsManager(URL + ":" + port, USERNAME, PASSWORD);
         String actualCrumb = jenkins.getCrumb();
-        assertTrue(actualCrumb.equals(""));
+        assertEquals("", actualCrumb);
     }
 
     @Test(expected = MalformedURLException.class)
@@ -191,7 +192,8 @@ public class JenkinsManagerTest {
     public void forceCreateJob() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpDeleteAndCreateEndpoint();
-        jenkins.forceCreateJob(JOB_NAME, XML);
+        boolean success = jenkins.forceCreateJob(JOB_NAME, XML);
+        assertTrue(success);
     }
 
     @Test
@@ -276,7 +278,8 @@ public class JenkinsManagerTest {
     public void getJenkinsBuildStatusDataBuildNumberNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpStatusEndpointFallback();
-        jenkins.getJenkinsBuildStatusData(JOB_NAME, null);
+        JSONObject json = jenkins.getJenkinsBuildStatusData(JOB_NAME, null);
+        assertEquals(BODY, json.toString());
     }
 
     @Test(expected = Exception.class)
@@ -290,7 +293,8 @@ public class JenkinsManagerTest {
     public void getJenkinsBuildStatusDataOnlyJobName() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpStatusEndpointFallback();
-        jenkins.getJenkinsBuildStatusData(JOB_NAME);
+        JSONObject json = jenkins.getJenkinsBuildStatusData(JOB_NAME);
+        assertEquals(BODY, json.toString());
     }
 
     @Test
@@ -364,7 +368,7 @@ public class JenkinsManagerTest {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpRestartAndAvailableEndpoint();
         boolean success = jenkins.restartJenkins();
-        assertTrue(!success);
+        assertFalse(success);
     }
 
     @Test(expected = Exception.class)
