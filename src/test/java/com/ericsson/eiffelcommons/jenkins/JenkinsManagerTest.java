@@ -310,7 +310,7 @@ public class JenkinsManagerTest {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginEndpoint();
         boolean success = jenkins.pluginExists(PLUGIN_NOT_FOUND);
-        assertTrue(!success);
+        assertFalse(success);
     }
 
     @Test(expected = Exception.class)
