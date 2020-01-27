@@ -27,6 +27,8 @@ import org.junit.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.mockserver.model.Parameter;
 
+import com.ericsson.eiffelcommons.exceptions.JenkinsManagerException;
+
 public class JenkinsManagerTest {
 
     private static final String UNKNOWN_HOST = "!¤€31";
@@ -143,19 +145,19 @@ public class JenkinsManagerTest {
         assertTrue(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void createJobNameNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.createJob(null, XML);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void createJobNameEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.createJob("", XML);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void createJobFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpCreateEndpointFail();
@@ -170,20 +172,20 @@ public class JenkinsManagerTest {
         assertTrue(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void deleteJobFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpDeleteEndpointFail();
         jenkins.deleteJob(JOB_NAME);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void deleteJobNameNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.deleteJob(null);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void deleteJobNameEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.deleteJob("");
@@ -205,26 +207,26 @@ public class JenkinsManagerTest {
         assertTrue(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void buildJobFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpBuildEndpointFail();
         jenkins.buildJob(JOB_NAME, TOKEN_VALUE);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void buildJobNameNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.buildJob(null, TOKEN_VALUE);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void buildJobNameEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.buildJob("", TOKEN_VALUE);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void buildJobTokenNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         jenkins.buildJob(JOB_NAME, null);
@@ -234,7 +236,8 @@ public class JenkinsManagerTest {
     public void buildJobTokenEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpBuildEndpoint();
-        jenkins.buildJob(JOB_NAME, "");
+        boolean success = jenkins.buildJob(JOB_NAME, "");
+        assertTrue(success);
     }
 
     @Test
@@ -261,14 +264,14 @@ public class JenkinsManagerTest {
         assertEquals(BODY, json.toString());
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void getJenkinsBuildStatusDataJobNameNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpStatusEndpoint();
         jenkins.getJenkinsBuildStatusData(null, BUILD_NUMBER);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void getJenkinsBuildStatusDataJobNameEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpStatusEndpoint();
@@ -283,7 +286,7 @@ public class JenkinsManagerTest {
         assertEquals(BODY, json.toString());
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void getJenkinsBuildStatusDataFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpStatusEndpointFail();
@@ -314,7 +317,7 @@ public class JenkinsManagerTest {
         assertFalse(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void pluginExistsFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginEndpointFail();
@@ -329,35 +332,35 @@ public class JenkinsManagerTest {
         assertTrue(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void installPluginNameNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginInstallEndpoint();
         jenkins.installPlugin(null, PLUGIN_VERSION);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void installPluginNameEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginInstallEndpoint();
         jenkins.installPlugin("", PLUGIN_VERSION);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void installPluginVersionNull() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginInstallEndpoint();
         jenkins.installPlugin(PLUGIN_NAME, null);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void installPluginVersionEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginInstallEndpoint();
         jenkins.installPlugin(PLUGIN_NAME, "");
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void installPluginFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpPluginInstallEndpointFail();
@@ -372,7 +375,7 @@ public class JenkinsManagerTest {
         assertFalse(success);
     }
 
-    @Test(expected = Exception.class)
+    @Test(expected = JenkinsManagerException.class)
     public void restartJenkinsFailRequest() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpRestartEndpointFail();
@@ -517,7 +520,7 @@ public class JenkinsManagerTest {
         mockServer.when(request().withMethod("GET")
                                  .withPath(ENDPOINT_STATUS)
                                  .withHeader(HEADER_AUTH, encodedPassword))
-                  .respond(response().withStatusCode(200));
+                  .respond(response().withStatusCode(500));
     }
 
     private void setUpPluginEndpoint() throws UnsupportedEncodingException {

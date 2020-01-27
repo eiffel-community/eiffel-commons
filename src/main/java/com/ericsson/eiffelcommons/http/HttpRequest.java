@@ -136,8 +136,7 @@ public class HttpRequest {
      * @param baseUrl
      */
     public HttpRequest setBaseUrl(String baseUrl) {
-        baseUrl = trimBaseUrl(baseUrl);
-        this.baseUrl = baseUrl;
+        this.baseUrl = trimBaseUrl(baseUrl);
         return this;
     }
 
@@ -350,13 +349,14 @@ public class HttpRequest {
     /**
      * Function that trims the base url for trailing slashes
      *
-     * @return HttpRequest
+     * @return trimmedUrl
      */
     private String trimBaseUrl(String baseUrl) {
+        String trimmedUrl = baseUrl;
         if (baseUrl.endsWith("/")) {
-            baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+            trimmedUrl = baseUrl.substring(0, baseUrl.length() - 1);
         }
 
-        return baseUrl;
+        return trimmedUrl;
     }
 }

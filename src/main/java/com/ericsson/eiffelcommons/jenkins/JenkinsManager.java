@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ericsson.eiffelcommons.constants.MediaType;
+import com.ericsson.eiffelcommons.exceptions.JenkinsManagerException;
 import com.ericsson.eiffelcommons.http.HttpRequest;
 import com.ericsson.eiffelcommons.http.ResponseEntity;
 import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
@@ -89,7 +90,7 @@ public class JenkinsManager {
         boolean success = false;
 
         if (jobName == null || jobName.isEmpty()) {
-            throw new Exception("A job is no one! Jenkins do not like no one!");
+            throw new JenkinsManagerException("A job is no one! Jenkins do not like no one!");
         }
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
@@ -107,7 +108,7 @@ public class JenkinsManager {
             String message = String.format(
                     "Failed to create a jenkins job with name %s using jenkins crumb %s.\nAnd job data:\n%s\nStatus code was: %s.",
                     jobName, crumb, jobXmlData, response.getStatusCodeValue());
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         return success;
@@ -205,7 +206,7 @@ public class JenkinsManager {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
 
         if (jobName == null || jobName.isEmpty()) {
-            throw new Exception("Cannot get job data without a job name.");
+            throw new JenkinsManagerException("Cannot get job data without a job name.");
         }
         if (buildNumber != null) {
             buildNumberString = buildNumber.toString();
@@ -224,7 +225,7 @@ public class JenkinsManager {
             String message = String.format(
                     "Failed to get status data from job %s and build %s. Status code: %s. Possibly not built yet.",
                     jobName, buildNumberString, response.getStatusCodeValue());
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         JSONObject jsonObj = new JSONObject(response.getBody());
@@ -254,7 +255,7 @@ public class JenkinsManager {
         boolean isDeleted = false;
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
         if (jobName == null || jobName.isEmpty()) {
-            throw new Exception("'No one' cannot be deleted from jenkins.");
+            throw new JenkinsManagerException("Undefined job cannot be deleted from jenkins.");
         }
 
         String endpoint = "/job/" + jobName + "/doDelete";
@@ -271,7 +272,7 @@ public class JenkinsManager {
         if (!isDeleted) {
             String message = "Failed to delete jenkins job " + jobName + ". Status code: "
                     + response.getStatusCodeValue() + ".";
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         return isDeleted;
@@ -300,7 +301,7 @@ public class JenkinsManager {
         if (!success) {
             String message = "Failed to fetch list of plugins from jenkins. Response code: "
                     + response.getStatusCodeValue();
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         JSONObject responseData = new JSONObject(response.getBody());
@@ -331,10 +332,10 @@ public class JenkinsManager {
         boolean success = false;
 
         if (plugin == null || plugin.isEmpty()) {
-            throw new Exception("'No plugin' cannot be added to jenkins.");
+            throw new JenkinsManagerException("Undefined plugin cannot be added to jenkins.");
         }
         if (version == null || version.isEmpty()) {
-            throw new Exception("A version must be speciified for the Jenkins Plugin.");
+            throw new JenkinsManagerException("A version must be speciified for the Jenkins Plugin.");
         }
 
         String scriptData = createInstallPluginScript(plugin, version);
@@ -353,7 +354,7 @@ public class JenkinsManager {
             String message = String.format(
                     "Failed to add a plugin with name %s and version %s to Jenkins. Response code: %s and body: %s",
                     plugin, version, response.getStatusCodeValue(), response.getBody());
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         return success;
@@ -384,7 +385,7 @@ public class JenkinsManager {
             String message = String.format(
                     "Failed to restart Jenkins. Response code: %s and body: %s",
                     response.getStatusCodeValue(), response.getBody());
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         restartVerified = verifyJenkinsRestart();
@@ -434,6 +435,7 @@ public class JenkinsManager {
      * @param mediatype
      * @param parameters
      * @param body
+     * @param httpRequest
      * @return
      * @throws Exception
      */
@@ -464,7 +466,7 @@ public class JenkinsManager {
             String message = String.format(
                     "Failed to trigger a jenkins job %s using token %s Status code: %s.", jobName,
                     jobToken, response.getStatusCodeValue());
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
         return success;
     }
@@ -478,10 +480,10 @@ public class JenkinsManager {
      */
     private void jobNameTokenValidation(String jobName, String jobToken) throws Exception {
         if (jobName == null || jobName.isEmpty()) {
-            throw new Exception("Cannot trigger a jenkins job without a job name.");
+            throw new JenkinsManagerException("Cannot trigger a jenkins job without a job name.");
         }
         if (jobToken == null) {
-            throw new Exception("A job token is required to trigger a jenkins job.");
+            throw new JenkinsManagerException("A job token is required to trigger a jenkins job.");
         }
     }
 
@@ -515,7 +517,7 @@ public class JenkinsManager {
         if (!success) {
             String message = "Could not verify that Jenkins started up correctly. Response code: "
                     + response.getStatusCodeValue() + " and body: " + response.getBody();
-            throw new Exception(message);
+            throw new JenkinsManagerException(message);
         }
 
         return success && serverDownRecieved;
