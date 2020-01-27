@@ -43,29 +43,30 @@ public class JenkinsManagerTest {
     private static final String XML = "<?xml version=\"1.0\"?><test>Test</test>";
     private static final String ENDPOINT_CREATE = "/createItem";
     private static final String HEADER_AUTH = "Authorization";
-    private static final String ENDPOINT_DELETE = "/job/" + JOB_NAME + "/doDelete";
+    private static final String ENDPOINT_DELETE = String.format("/job/%s/doDelete", JOB_NAME);
     private static final String TOKEN_KEY = "token";
     private static final String TOKEN_VALUE = "myToken";
-    private static final String ENDPOINT_BUILD = "/job/" + JOB_NAME + "/build";
+    private static final String ENDPOINT_BUILD = String.format("/job/%s/build", JOB_NAME);
     private static final String BODY = "{}";
+    private static final String BODY_JSON = "json={}";
     private static final String PARAMETER_KEY = "key";
     private static final String PARAMETER_VALUE = "value";
-    private static final String ENDPOINT_BUILD_PARAMETERS = "/job/" + JOB_NAME
-            + "/buildWithParameters";
+    private static final String ENDPOINT_BUILD_PARAMETERS = String.format(
+            "/job/%s/buildWithParameters", JOB_NAME);
     private static final int BUILD_NUMBER = 1;
-    private static final String ENDPOINT_STATUS = "/job/" + JOB_NAME + "/" + BUILD_NUMBER
-            + "/api/json";
-    private static final String ENDPOINT_STATUS_FALLBACK = "/job/" + JOB_NAME
-            + "/lastBuild/api/json";
+    private static final String ENDPOINT_STATUS = String.format("/job/%s/%s/api/json", JOB_NAME,
+            BUILD_NUMBER);
+    private static final String ENDPOINT_STATUS_FALLBACK = String.format(
+            "/job/%s/lastBuild/api/json", JOB_NAME);
     private static final String ENDPOINT_PLUGIN = "/pluginManager/api/json";
     private static final String PLUGIN_NAME = "myPlugin";
-    private static final String BODY_PLUGIN = "{\"plugins\":[{\"shortName\":\"" + PLUGIN_NAME
-            + "\"}]}";
+    private static final String BODY_PLUGIN = String.format(
+            "{\"plugins\":[{\"shortName\":\"%s\"}]}", PLUGIN_NAME);
     private static final String PLUGIN_NOT_FOUND = "dummy";
     private static final String ENDPOINT_PLUGIN_INSTALL = "/pluginManager/installNecessaryPlugins";
     private static final String PLUGIN_VERSION = "1.0.0";
-    private static final String BODY_PLUGIN_INSTALL = "<jenkins><install plugin='" + PLUGIN_NAME
-            + "@" + PLUGIN_VERSION + "' /></jenkins>";
+    private static final String BODY_PLUGIN_INSTALL = String.format(
+            "<jenkins><install plugin='%s@%s'/></jenkins>", PLUGIN_NAME, PLUGIN_VERSION);
     private static final String ENDPOINT_RESTART = "/safeRestart";
     private static final String ENDPOINT_JENKINS = "/api/json";
 
@@ -93,7 +94,7 @@ public class JenkinsManagerTest {
         String expectedUrl = URL + ":" + port;
         assertEquals(expectedUrl, actualUrl);
         String actualEncoding = jenkins.getEncoding();
-        String expectedEncoding =createEncodingFromUsernameAndPassword(USERNAME, PASSWORD);
+        String expectedEncoding = createEncodingFromUsernameAndPassword(USERNAME, PASSWORD);
         assertEquals(expectedEncoding, actualEncoding);
     }
 
@@ -229,18 +230,18 @@ public class JenkinsManagerTest {
         jenkins.buildJob(JOB_NAME, null);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void buildJobTokenEmpty() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
+        setUpBuildEndpoint();
         jenkins.buildJob(JOB_NAME, "");
     }
 
-    @Test(expected = ClassCastException.class)
+    @Test
     public void buildJobWithFormPostParams() throws Exception {
-        // ! This tests a faulty method !
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpBuildEndpointWithBody();
-        boolean success = jenkins.buildJobWithFormPostParams(JOB_NAME, TOKEN_VALUE, BODY);
+        boolean success = jenkins.buildJobWithFormPostParams(JOB_NAME, TOKEN_VALUE, BODY_JSON);
         assertTrue(success);
     }
 
@@ -468,10 +469,10 @@ public class JenkinsManagerTest {
         mockServer.reset();
         String encodedPassword = "Basic "
                 + createEncodingFromUsernameAndPassword(USERNAME, PASSWORD);
-        mockServer.when(request().withMethod("GET")
+        mockServer.when(request().withMethod("POST")
                                  .withPath(ENDPOINT_BUILD)
                                  .withHeader(HEADER_AUTH, encodedPassword)
-                                 .withBody(BODY))
+                                 .withBody(BODY_JSON))
                   .respond(response().withStatusCode(201));
     }
 

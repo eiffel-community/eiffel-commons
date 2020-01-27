@@ -104,10 +104,9 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_OK;
 
         if (!success) {
-            String message = "Failed to create a jenkins job with name " + jobName
-                    + " using jenkins crumb " + crumb
-                    + ".\nAnd job data:\n" + jobXmlData + "\nStatus code was: "
-                    + response.getStatusCodeValue() + ".";
+            String message = String.format(
+                    "Failed to create a jenkins job with name %s using jenkins crumb %s.\nAnd job data:\n%s\nStatus code was: %s.",
+                    jobName, crumb, jobXmlData, response.getStatusCodeValue());
             throw new Exception(message);
         }
 
@@ -159,16 +158,13 @@ public class JenkinsManager {
      * @return
      * @throws Exception
      */
-    @Deprecated
     public boolean buildJobWithFormPostParams(String jobName, String jobToken, String body)
             throws Exception {
-        // ! This method currently doesn't work with a fixed GET request as it will fail to set the
-        // body !
-        // ! Unclear if this should even be possible in Jenkins !
         String buildType = "build";
+        HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
         boolean success = executeJobTriggering(jobName, jobToken, buildType,
                 MediaType.APPLICATION_FORM_URLENCODED,
-                null, body);
+                null, body, httpRequest);
 
         return success;
     }
@@ -225,10 +221,9 @@ public class JenkinsManager {
         dataRecieved = response.getStatusCode() == HttpStatus.SC_OK;
 
         if (!dataRecieved) {
-            String message = "Failed to get status data from job " + jobName + " and build "
-                    + buildNumberString
-                    + ". Status code: " + response.getStatusCodeValue()
-                    + ". Possible not built yet.";
+            String message = String.format(
+                    "Failed to get status data from job %s and build %s. Status code: %s. Possibly not built yet.",
+                    jobName, buildNumberString, response.getStatusCodeValue());
             throw new Exception(message);
         }
 
@@ -342,8 +337,7 @@ public class JenkinsManager {
             throw new Exception("A version must be speciified for the Jenkins Plugin.");
         }
 
-        String scriptData = "<jenkins><install plugin='" + plugin + "@" + version
-                + "' /></jenkins>";
+        String scriptData = createInstallPluginScript(plugin, version);
 
         httpRequest.setBaseUrl(jenkinsBaseUrl)
                    .addHeader("Authorization", "Basic " + encoding)
@@ -356,10 +350,9 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
 
         if (!success) {
-            String message = "Failed to add a plugin with name " + plugin + " and version "
-                    + version
-                    + " to Jenkins. Response code: " + response.getStatusCodeValue() + " and body: "
-                    + response.getBody();
+            String message = String.format(
+                    "Failed to add a plugin with name %s and version %s to Jenkins. Response code: %s and body: %s",
+                    plugin, version, response.getStatusCodeValue(), response.getBody());
             throw new Exception(message);
         }
 
@@ -367,7 +360,7 @@ public class JenkinsManager {
     }
 
     /**
-     * Trigger a restart of jenkins, returns true if restart was successfull.
+     * Trigger a restart of jenkins, returns true if restart was successful.
      *
      * @return
      * @throws Exception
@@ -388,9 +381,9 @@ public class JenkinsManager {
         success = response.getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY;
 
         if (!success) {
-            String message = "Failed to restart Jenkins. Response code: "
-                    + response.getStatusCodeValue()
-                    + " and body: " + response.getBody();
+            String message = String.format(
+                    "Failed to restart Jenkins. Response code: %s and body: %s",
+                    response.getStatusCodeValue(), response.getBody());
             throw new Exception(message);
         }
 
@@ -427,8 +420,28 @@ public class JenkinsManager {
             String mediatype,
             Map<String, String> parameters, String body)
             throws Exception {
-        jobNameTokenValidation(jobName, jobToken);
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
+        boolean success = executeJobTriggering(jobName, jobToken, buildType, mediatype, parameters, body, httpRequest);
+        return success;
+    }
+
+    /**
+     * Executes job triggering with given parameters or body if any.
+     *
+     * @param jobName
+     * @param jobToken
+     * @param buildType
+     * @param mediatype
+     * @param parameters
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    private boolean executeJobTriggering(String jobName, String jobToken, String buildType,
+            String mediatype,
+            Map<String, String> parameters, String body, HttpRequest httpRequest)
+            throws Exception {
+        jobNameTokenValidation(jobName, jobToken);
         String endpoint = "/job/" + jobName + "/" + buildType;
 
         if (parameters != null) {
@@ -448,9 +461,9 @@ public class JenkinsManager {
         Boolean success = response.getStatusCode() == HttpStatus.SC_CREATED;
 
         if (!success) {
-            String message = "Failed to trigger a jenkins job " + jobName + " using token "
-                    + jobToken
-                    + " Status code: " + response.getStatusCodeValue() + ".";
+            String message = String.format(
+                    "Failed to trigger a jenkins job %s using token %s Status code: %s.", jobName,
+                    jobToken, response.getStatusCodeValue());
             throw new Exception(message);
         }
         return success;
@@ -467,7 +480,7 @@ public class JenkinsManager {
         if (jobName == null || jobName.isEmpty()) {
             throw new Exception("Cannot trigger a jenkins job without a job name.");
         }
-        if (jobToken == null || jobToken.isEmpty()) {
+        if (jobToken == null) {
             throw new Exception("A job token is required to trigger a jenkins job.");
         }
     }
@@ -524,7 +537,8 @@ public class JenkinsManager {
     }
 
     /**
-     * This function fetches a crumb from Jenkins.
+     * This function fetches a crumb from Jenkins. A crumb is a token meant to prevent CSRF attacks.
+     * This token is then attached as a header on requests to Jenkins.
      *
      * @return
      * @throws IOException
@@ -551,5 +565,11 @@ public class JenkinsManager {
         }
 
         return crumb;
+    }
+
+    private String createInstallPluginScript(String plugin, String version) {
+        String scriptData = String.format("<jenkins><install plugin='%s@%s'/></jenkins>", plugin,
+                version);
+        return scriptData;
     }
 }
