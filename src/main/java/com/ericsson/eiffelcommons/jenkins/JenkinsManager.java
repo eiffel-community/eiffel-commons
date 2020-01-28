@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONArray;
@@ -89,7 +90,7 @@ public class JenkinsManager {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
         boolean success = false;
 
-        if (jobName == null || jobName.isEmpty()) {
+        if (StringUtils.isEmpty(jobName)) {
             throw new JenkinsManagerException("A job is no one! Jenkins do not like no one!");
         }
 
@@ -205,7 +206,7 @@ public class JenkinsManager {
         String buildNumberString = "lastBuild";
         HttpRequest httpRequest = new HttpRequest(HttpMethod.GET);
 
-        if (jobName == null || jobName.isEmpty()) {
+        if (StringUtils.isEmpty(jobName)) {
             throw new JenkinsManagerException("Cannot get job data without a job name.");
         }
         if (buildNumber != null) {
@@ -254,7 +255,7 @@ public class JenkinsManager {
     public boolean deleteJob(String jobName) throws Exception {
         boolean isDeleted = false;
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
-        if (jobName == null || jobName.isEmpty()) {
+        if (StringUtils.isEmpty(jobName)) {
             throw new JenkinsManagerException("Undefined job cannot be deleted from jenkins.");
         }
 
@@ -331,10 +332,10 @@ public class JenkinsManager {
         HttpRequest httpRequest = new HttpRequest(HttpMethod.POST);
         boolean success = false;
 
-        if (plugin == null || plugin.isEmpty()) {
+        if (StringUtils.isEmpty(plugin)) {
             throw new JenkinsManagerException("Undefined plugin cannot be added to jenkins.");
         }
-        if (version == null || version.isEmpty()) {
+        if (StringUtils.isEmpty(version)) {
             throw new JenkinsManagerException("A version must be speciified for the Jenkins Plugin.");
         }
 
@@ -479,7 +480,7 @@ public class JenkinsManager {
      * @throws Exception
      */
     private void jobNameTokenValidation(String jobName, String jobToken) throws Exception {
-        if (jobName == null || jobName.isEmpty()) {
+        if (StringUtils.isEmpty(jobName)) {
             throw new JenkinsManagerException("Cannot trigger a jenkins job without a job name.");
         }
         if (jobToken == null) {
