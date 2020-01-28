@@ -1,5 +1,5 @@
 /*
-   Copyright 2019 Ericsson AB.
+   Copyright 2020 Ericsson AB.
    For a full list of individual contributors, please see the commit history.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-package com.ericsson.eiffelcommons.constants;
+package com.ericsson.eiffelcommons.exceptions;
 
-public final class RegExProvider {
+public class JenkinsManagerException extends Exception {
 
-    public static final String SUBSCRIPTION_NAME = "(\\W)";
-    public static final String NOTIFICATION_META = "^(([^<>()\\[\\]\\\\.,;:\\s@\"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+    private static final long serialVersionUID = 2L;
 
-    private RegExProvider() {
-        throw new AssertionError();
+    public JenkinsManagerException() {
+        super();
     }
+
+    public JenkinsManagerException(String message) {
+        super(message);
+    }
+
+    public JenkinsManagerException(String message, Throwable e) {
+        super(message, e);
+    }
+
 }

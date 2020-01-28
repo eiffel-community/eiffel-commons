@@ -28,7 +28,7 @@ public class JenkinsManagerExecutionTest {
     private static final String password = "admin";
     private static final String protocol = "http";
     private static final String host = "localhost";
-    private static final int port = 8081;
+    private static final int port = 8082;
 
     static List<String> testJobNameList = new ArrayList<>(Arrays.asList("Test_Job1", "Test_Job2", "Test_Job3", "Test_Job4", "Test_Job5", "Test_Job6",
             "Test_Job7", "Test_Job8", "Test_Job9", "Test_Job10", "Test_Job11", "Test_Job12", "Test_Job13", "Test_Job14", "Test_Job15", "Test_Job16",
@@ -46,8 +46,8 @@ public class JenkinsManagerExecutionTest {
         String parameter_2 = "param_string_2";
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put(parameter_1, "My pramaeter value");
-        parameters.put(parameter_2, "My second pramaeter value");
+        parameters.put(parameter_1, "My parameter value");
+        parameters.put(parameter_2, "My second parameter value");
 
         JenkinsXmlData jobXmlData = getXmlData(parameter_1, parameter_2, token);
 
