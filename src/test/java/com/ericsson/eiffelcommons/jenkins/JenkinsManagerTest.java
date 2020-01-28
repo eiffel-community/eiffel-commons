@@ -371,6 +371,8 @@ public class JenkinsManagerTest {
     public void restartJenkinsServerNeverDown() throws Exception {
         JenkinsManager jenkins = setUpJenkinsManager();
         setUpRestartAndAvailableEndpoint();
+        // Returns true if jenkins is down on the first check and then later becomes available. Returns
+        // false if jenkins never responded or if it is available on the first check.
         boolean success = jenkins.restartJenkins();
         assertFalse(success);
     }
