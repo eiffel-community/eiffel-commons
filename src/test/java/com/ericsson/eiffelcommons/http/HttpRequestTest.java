@@ -33,6 +33,7 @@ import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
 public class HttpRequestTest {
     private static final String URL_1 = "http://something.com";
     private static final String URL_2 = "http://something.com/";
+    private static final String URL_3 = "http://someothing.com";
     private static final String URL_BAD_PROTOCOL = "httpl://something.com/";
     private static final String URL_BAD_SYNTAX = "http:<<something.com/";
     private static final String ENDPOINT_1 = "/testing/test/";
@@ -229,7 +230,7 @@ public class HttpRequestTest {
     public void testPerformRequestUnknownHost()
             throws ClientProtocolException, URISyntaxException, IOException {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
-        request.setBaseUrl(URL_1).setEndpoint(ENDPOINT_1);
+        request.setBaseUrl(URL_3).setEndpoint(ENDPOINT_1);
         request.performRequest();
     }
 
@@ -252,7 +253,7 @@ public class HttpRequestTest {
     public void testPerformRequestNoEndpoint()
             throws ClientProtocolException, URISyntaxException, IOException {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
-        request.setBaseUrl(URL_1);
+        request.setBaseUrl(URL_3);
         request.performRequest();
     }
 
@@ -260,7 +261,7 @@ public class HttpRequestTest {
     public void testPerformRequestWithParameters()
             throws ClientProtocolException, URISyntaxException, IOException {
         HttpRequest request = new HttpRequest(HttpMethod.GET);
-        request.setBaseUrl(URL_1).addParameter(PARAMETER_KEY_1, PARAMETER_VALUE_1);
+        request.setBaseUrl(URL_3).addParameter(PARAMETER_KEY_1, PARAMETER_VALUE_1);
         request.performRequest();
     }
 }
