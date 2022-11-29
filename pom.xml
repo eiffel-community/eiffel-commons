@@ -7,7 +7,6 @@
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-commons-java</artifactId>
     <version>0.0.17</version>
-
     <name>eiffel commons java</name>
     <description>A shared library for eiffel components</description>
 
