@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.ericsson</groupId>
     <artifactId>eiffel-commons-java</artifactId>
-    <version>0.0.17</version>
+    <version>0.0.18</version>
     <name>eiffel commons java</name>
     <description>A shared library for eiffel components</description>
 
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.3</version>
+            <version>4.5.13</version>
         </dependency>
 
         <dependency>
