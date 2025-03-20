@@ -1,5 +1,5 @@
 jdk:
   - openjdk8
 before_install:
-   - sdk install java 8.0.212-tem
-   - sdk use java 8.0.212-tem
+   - sdk install java 8.0.212-zulu
+   - sdk use java 8.0.212-zulu
