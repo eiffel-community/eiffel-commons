@@ -9,7 +9,6 @@ import static org.mockserver.model.HttpResponse.response;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -20,6 +19,7 @@ import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.conn.UnsupportedSchemeException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.BeforeClass;
@@ -33,11 +33,11 @@ public class JenkinsManagerTest {
 
     private static final String UNKNOWN_HOST = "!¤€31";
     private static final int PORT_OUT_OF_RANGE = 1000000;
-    private static final String INVALID_PROTOCOL = "httg";
     private static final String URL = "http://localhost";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String PROTOCOL = "http";
+    private static final String INVALID_PROTOCOL = "httg";
     private static final String HOST = "localhost";
     private static final String ENDPOINT_CRUMB = "/crumbIssuer/api/json";
     private static final String RESPONSE_CRUMB = "{\"crumb\":\"fb171d526b9cc9e25afe80b356e12cb7\",\"crumbRequestField\":\".crumb\"}";
@@ -119,7 +119,7 @@ public class JenkinsManagerTest {
         assertEquals("", actualCrumb);
     }
 
-    @Test(expected = MalformedURLException.class)
+    @Test(expected = UnsupportedSchemeException.class)
     public void jenkinsManagerConstructorInvalidProtocol()
             throws ClientProtocolException, URISyntaxException, IOException {
         new JenkinsManager(INVALID_PROTOCOL, HOST, port, USERNAME, PASSWORD);
