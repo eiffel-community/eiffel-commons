@@ -31,7 +31,7 @@ import com.ericsson.eiffelcommons.http.HttpRequest;
 import com.ericsson.eiffelcommons.http.HttpRequest.HttpMethod;
 
 public class HttpRequestTest {
-    private static final String URL_1 = "http://something.com";
+    private static final String URL_1 = "http://some0thing.com";
     private static final String URL_2 = "http://something.com/";
     private static final String URL_BAD_PROTOCOL = "httpl://something.com/";
     private static final String URL_BAD_SYNTAX = "http:<<something.com/";
@@ -57,7 +57,7 @@ public class HttpRequestTest {
     @Test
     public void testBuildingOfURI() throws Exception {
         HttpRequest request = new HttpRequest(HttpMethod.POST);
-        request.setBaseUrl(URL_1);
+        request.setBaseUrl(URL_2);
         request.setEndpoint(ENDPOINT_1);
         URIBuilder builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
         assertEquals(EXPECTED_URI, builder.toString());
@@ -75,7 +75,7 @@ public class HttpRequestTest {
         assertEquals(EXPECTED_URI, builder.toString());
 
         request = new HttpRequest(HttpMethod.PUT);
-        request.setBaseUrl(URL_1);
+        request.setBaseUrl(URL_2);
         request.setEndpoint(ENDPOINT_2);
         builder = (URIBuilder) Whitebox.invokeMethod(request, "createURIBuilder");
         assertEquals(EXPECTED_URI, builder.toString());
